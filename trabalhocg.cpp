@@ -1,4 +1,5 @@
 #include "lib/tinyxml2.h"
+#include "lib/CImg.h"
 #include "lib/Point.h"
 #include "lib/Circle.h"
 #include "lib/Rectangle.h"
@@ -15,6 +16,7 @@ bool gameOn = false;
 bool gameOver = false;
 
 using namespace tinyxml2;
+using namespace cimg_library;
 #ifndef XMLCheckResult
 	#define XMLCheckResult(a_eResult) if (a_eResult != XML_SUCCESS) { printf("Error: %i\n", a_eResult); return a_eResult; }
 #endif
