@@ -4,9 +4,6 @@
 
 
 # Make
- - `all`
- - `clean`
-
   ### all
     Build all `.o` files
   
