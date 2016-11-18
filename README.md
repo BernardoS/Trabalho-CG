@@ -8,7 +8,7 @@ git add filename OR git add -A
 
 git commit -m "message here"
 
-git push OR
+git push
 
 git pull
 
@@ -16,7 +16,7 @@ git pull
 
 ### all
     Build all `.o` files
-  
+
 ### clean
     Delete all build files
 
