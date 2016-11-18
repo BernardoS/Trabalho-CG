@@ -8,7 +8,7 @@ git add filename OR git add -A
 
 git commit -m "message here"
 
-git push
+git push OR
 
 git pull
 
