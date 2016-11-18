@@ -2,8 +2,15 @@
 - [Make](#make)
 - [Running](#running)
 
-lololol
+git status
 
+git add filename OR git add -A
+
+git commit -m "message here"
+
+git push
+
+git pull
 
 # Make
 
