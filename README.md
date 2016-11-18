@@ -4,10 +4,11 @@
 
 
 # Make
-  ### all
+
+### all
     Build all `.o` files
   
-  ### clean
+### clean
     Delete all build files
 
 # Running
