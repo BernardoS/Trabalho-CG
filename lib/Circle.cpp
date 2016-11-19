@@ -37,7 +37,7 @@ void Circle::draw() {
   GLfloat* materialSpecular = specular();
   GLfloat* materialShininess = shininess();
   glPushMatrix();
-    if (materialEmission != NULL) glMaterialfv(GL_FRONT, GL_EMISSION, materialEmission);
+    if (materialEmission != NULL)glMaterialfv(GL_FRONT, GL_EMISSION, materialEmission);
     if (materialAmbient != NULL) glMaterialfv(GL_FRONT, GL_AMBIENT, materialAmbient);
     if (materialDifuse != NULL) glMaterialfv(GL_FRONT, GL_DIFFUSE, materialDifuse);
     if (materialSpecular != NULL) glMaterialfv(GL_FRONT, GL_SPECULAR, materialSpecular);

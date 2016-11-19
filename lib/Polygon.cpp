@@ -29,11 +29,11 @@ Polygon::Polygon (Point* pos, GLfloat color[3], GLuint tex, GLfloat* emission, G
   for (size_t i = 0; i < 3; i++) this->color[i] = color[i];
   this->pos = pos;
   this->tex = tex;
-  materialEmission = emission;
-  materialAmbient = ambient;
-  materialDifuse = difuse;
-  materialSpecular = specular;
-  materialShininess = shininess;
+  materialEmission = vector<GLfloat>(emission, emission + 4);
+  materialAmbient = vector<GLfloat>(ambient, ambient + 4);
+  materialDifuse = vector<GLfloat>(difuse, difuse + 4);
+  materialSpecular = vector<GLfloat>(specular, specular + 4);
+  materialShininess = vector<GLfloat>(specular, specular + 1);
 }
 
 Polygon::Polygon(Point* pos){
@@ -65,33 +65,47 @@ GLuint Polygon::texture(){
   return tex;
 }
 
-void Polygon::emission(GLfloat* newParam) {
-  materialEmission = newParam;
+void Polygon::emission(GLfloat* newParam){
+  materialEmission.assign(newParam, newParam + 4);
 }
+
 GLfloat* Polygon::emission() {
-  return materialEmission;
+  if (materialEmission.size() > 0)
+    return &materialEmission[0];
+  return NULL;
 }
+
 void Polygon::ambient(GLfloat* newParam){
-  materialAmbient = newParam;
+  materialAmbient.assign(newParam, newParam + 4);
 }
 GLfloat* Polygon::ambient(){
-  return materialAmbient;
+  if (materialAmbient.size() > 0)
+    return &materialAmbient[0];
+  return NULL;
 }
 void Polygon::difuse(GLfloat* newParam){
-  materialDifuse = newParam;
+  materialDifuse.assign(newParam, newParam + 4);
 }
 GLfloat* Polygon::difuse(){
-  return materialDifuse;
+  if (materialDifuse.size() > 0){
+    // std::cout << materialDifuse[0] << std::endl;
+    return &materialDifuse[0];
+  }
+  return NULL;
 }
 void Polygon::specular(GLfloat* newParam){
-  materialSpecular = newParam;
+  materialSpecular.assign(newParam, newParam + 4);
 }
 GLfloat* Polygon::specular(){
-  return materialSpecular;
+  if (materialSpecular.size() > 0)
+    return &materialSpecular[0];
+  return NULL;
 }
 void Polygon::shininess(GLfloat* newParam){
-  materialShininess = newParam;
+  materialShininess.assign(newParam, newParam + 1);
 }
 GLfloat* Polygon::shininess(){
-  return materialShininess;
+  if (materialShininess.size() > 0)
+    return &materialShininess[0];
+  return NULL;
 }

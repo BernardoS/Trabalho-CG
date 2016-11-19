@@ -86,6 +86,46 @@ std::string readXml(XMLDocument &doc) {
 	return path;
 }
 
+void makeArena(const char* fill, double r, double x, double y){
+	if (strcmp(fill, "blue") == 0) {
+		window.width = r*2;
+		window.height = r*2;
+
+		GLfloat color[3] = {0,0,1};
+		GLfloat materialEmission[] = {0.10, 0.10, 0.10, 1};
+    GLfloat materialAmbient[] = {0, 0, 1, 0.2};
+    GLfloat materialDifuse[] = {0, 0, 1, 0.2};
+    GLfloat materialSpecular[] = {0, 0, 0, 1};
+    GLfloat materialShininess[] = {0.0 };
+
+		Arena[0] = *(new Circle(relativeX(r),color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess));
+		Arena[0].position(relativeX(x), relativeY(y));
+	} else {
+		GLfloat color[3] = {1,1,1};
+
+		GLfloat materialEmission[] = {0.10, 0.10, 0.10, 1};
+		GLfloat materialAmbient[] = {1, 1, 1, 0.2};
+		GLfloat materialDifuse[] = {1, 1, 1, 0.2};
+		GLfloat materialSpecular[] = { 0, 0, 0, 1};
+		GLfloat materialShininess[] = { 0.0 };
+
+		Arena[1] = *(new Circle(relativeX(r), color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess));
+		Arena[1].position(relativeX(x), relativeY(y));
+	}
+}
+void makeEnemy(double r, double x, double y){
+	GLfloat color[3] = {1,0,0};
+	Car* Inimigo = new Car(new Circle(relativeX(r), color));
+	Inimigo->position(relativeX(x), relativeY(y));
+	Inimigos.push_back(Inimigo);
+}
+
+void makePlayer(double r, double x, double y){
+	GLfloat color[3] = {0,1,0};
+	Jogador = new Car(new Circle(relativeX(r),color));
+	Jogador->position(relativeX(x), relativeY(y));
+}
+
 void readSvg(XMLDocument &doc) {
 	XMLElement* svg = doc.FirstChildElement();
 	XMLElement* current = svg->FirstChildElement();
@@ -97,24 +137,13 @@ void readSvg(XMLDocument &doc) {
 			current->QueryDoubleAttribute( "r", &r);
 			const char* fill = current->Attribute("fill");
 			if (strcmp(fill, "red") == 0) {
-				GLfloat color[3] = {1,0,0};
-				Car* Inimigo = new Car(new Circle(relativeX(r), color));
-				Inimigo->position(relativeX(cx), relativeY(cy));
-				Inimigos.push_back(Inimigo);
+				makeEnemy(r, cx, cy);
 			} else if (strcmp(fill, "blue") == 0) {
-				window.width = r*2;
-				window.height = r*2;
-				GLfloat color[3] = {0,0,1};
-				Arena[0] = *(new Circle(relativeX(r),color));
-				Arena[0].position(relativeX(cx), relativeY(cy));
+				makeArena(fill, r, cx, cx);
 			} else if (strcmp(fill, "white") == 0) {
-				GLfloat color[3] = {1,1,1};
-				Arena[1] = *(new Circle(relativeX(r), color));
-				Arena[1].position(relativeX(cx), relativeY(cy));
+				makeArena(fill, r, cx, cy);
 			} else if (strcmp(fill, "green") == 0) {
-				GLfloat color[3] = {0,1,0};
-				Jogador = new Car(new Circle(relativeX(r),color));
-				Jogador->position(relativeX(cx), relativeY(cy));
+				makePlayer(r, cx, cy);
 			}
 		} else {
 			double x, y, width, height;
@@ -381,10 +410,10 @@ void idleFunc() {
 void init() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable( GL_TEXTURE_2D );
-	// glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHTING);
 	glShadeModel (GL_SMOOTH);
 	glDepthFunc(GL_LEQUAL);
-	// glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT0);
 
   glClearColor(1,1,1,0);
   glMatrixMode(GL_PROJECTION);

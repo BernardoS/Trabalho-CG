@@ -2,8 +2,9 @@
 #define Polygon_H
 
 #include <GL/gl.h>
+#include <vector>
 
-
+using namespace std;
 class Point;
 
 class Polygon {
@@ -11,11 +12,11 @@ private:
 	Point* pos;
 	GLuint tex;
 	//Material stuff
-	GLfloat* materialEmission = NULL;
-	GLfloat* materialAmbient = NULL;
-	GLfloat* materialDifuse = NULL;
-	GLfloat* materialSpecular = NULL;
-	GLfloat* materialShininess = NULL;
+	vector<GLfloat> materialEmission;
+	vector<GLfloat> materialAmbient;
+	vector<GLfloat> materialDifuse;
+	vector<GLfloat> materialSpecular;
+	vector<GLfloat> materialShininess;
 public:
 	GLfloat color[3];
   Polygon ();
