@@ -12,6 +12,16 @@ Circle::Circle (double radius, GLfloat color[3]) : Polygon(new Point(), color){
   this->radius = radius;
   angle = 0;
 }
+
+Circle::Circle (double radius, GLfloat color[3], GLuint tex) : Polygon(new Point(), color, tex){
+  this->radius = radius;
+  angle = 0;
+}
+
+Circle::Circle (double radius, GLfloat color[3], GLuint tex, GLfloat* emission, GLfloat* ambient, GLfloat* difuse, GLfloat* specular, GLfloat* shininess) : Polygon(new Point(), color, tex, emission, ambient, difuse, specular, shininess){
+  this->radius = radius;
+  angle = 0;
+}
 Circle::Circle (double radius) : Polygon(new Point()){
   this->radius = radius;
   angle = 0;
@@ -21,16 +31,19 @@ Circle::Circle (Circle* circle) : Polygon(circle->position(), circle->color){
   angle = 0;
 }
 void Circle::draw() {
-  GLfloat materialEmission[] = {0.10, 0.10, 0.10, 1};
-  GLfloat materialColorA[] = {(GLfloat) color[0], (GLfloat) color[1], (GLfloat) color[2], 1};
-  GLfloat materialColorD[] = {(GLfloat) color[0], (GLfloat) color[1], (GLfloat) color[2], 1};
-
+  GLfloat* materialEmission = emission();
+  GLfloat* materialAmbient = ambient();
+  GLfloat* materialDifuse = difuse();
+  GLfloat* materialSpecular = specular();
+  GLfloat* materialShininess = shininess();
   glPushMatrix();
-    glMaterialfv(GL_FRONT, GL_EMISSION, materialEmission);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, materialColorA);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, materialColorD);
-    glTranslatef(position()->x,position()->y,0);
+    if (materialEmission != NULL) glMaterialfv(GL_FRONT, GL_EMISSION, materialEmission);
+    if (materialAmbient != NULL) glMaterialfv(GL_FRONT, GL_AMBIENT, materialAmbient);
+    if (materialDifuse != NULL) glMaterialfv(GL_FRONT, GL_DIFFUSE, materialDifuse);
+    if (materialSpecular != NULL) glMaterialfv(GL_FRONT, GL_SPECULAR, materialSpecular);
+    if (materialShininess != NULL) glMaterialfv(GL_FRONT, GL_SHININESS, materialShininess);
     glBindTexture (GL_TEXTURE_2D, texture());
+    glTranslatef(position()->x,position()->y,0);
     glColor3f(color[0],color[1],color[2]);
     glBegin(GL_POLYGON);
       const float n = 10000;

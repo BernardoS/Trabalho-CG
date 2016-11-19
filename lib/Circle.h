@@ -12,6 +12,8 @@ public:
 	Circle();
 	Circle(double radius);
 	Circle (double radius, GLfloat color[3]);
+	Circle (double radius, GLfloat color[3], GLuint tex);
+	Circle (double radius, GLfloat color[3], GLuint tex, GLfloat* emission, GLfloat* ambient, GLfloat* difuse, GLfloat* specular, GLfloat* shininess);
 	Circle(Circle* circle);
 	void draw();
 	bool in(double x, double y, double r);

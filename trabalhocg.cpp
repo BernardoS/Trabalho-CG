@@ -381,10 +381,10 @@ void idleFunc() {
 void init() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable( GL_TEXTURE_2D );
-	glEnable(GL_LIGHTING);
+	// glEnable(GL_LIGHTING);
 	glShadeModel (GL_SMOOTH);
 	glDepthFunc(GL_LEQUAL);
-	glEnable(GL_LIGHT0);
+	// glEnable(GL_LIGHT0);
 
   glClearColor(1,1,1,0);
   glMatrixMode(GL_PROJECTION);
