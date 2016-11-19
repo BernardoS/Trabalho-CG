@@ -24,12 +24,14 @@ void Circle::draw() {
   glPushMatrix();
     glTranslatef(position()->x,position()->y,0);
     glColor3f(color[0],color[1],color[2]);
+    glBindTexture (GL_TEXTURE_2D, texture());
     glBegin(GL_POLYGON);
       const float n = 10000;
       for(float i = 0; i < n; i++){
         float angle = 2.0 * 3.1415926 * i / n;
         float x = radius * cos(angle);
         float y = radius * sin(angle);
+        glTexCoord2f(x, y);
         glVertex3f(x, y,0);
       }
     glEnd();

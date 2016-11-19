@@ -2,11 +2,16 @@
 #include "Polygon.h"
 #include "Point.h"
 #include <iostream>
+#include <GL/gl.h>
 
 
 Polygon::Polygon(){
   for (size_t i = 0; i < 3; i++) color[i] = 0;
   pos = new Point();
+}
+
+Polygon::Polygon(GLuint texture){
+  tex = texture;
 }
 
 Polygon::Polygon(Point* pos, double color[3]){
@@ -32,4 +37,12 @@ void Polygon::position(Point* newPos) {
 }
 Point* Polygon::position(){
   return pos;
+}
+
+void Polygon::texture(GLuint texture) {
+  tex = texture;
+}
+
+GLuint Polygon::texture(){
+  return tex;
 }

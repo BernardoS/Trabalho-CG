@@ -2,10 +2,10 @@ all: trabalhocg staticlib
 
 rebuild: clean all
 
-trabalhocg: trabalhocg.cpp Point.a Polygon.a Circle.a Rectangle.a Car.a libtinyxml2.a -lglut -lGLU -lGL
+trabalhocg: trabalhocg.cpp Point.a Polygon.a Circle.a Rectangle.a Car.a libtinyxml2.a -lglut -lGLU -lGL -lX11 -lpthread
 
 clean:
-	$(RM) ./lib/*.o trabalhocg libtinyxml2.a Point.a Polygon.a Circle.a Rectangle.a Car.a
+	$(RM) ./lib/*.o *.o trabalhocg libtinyxml2.a Point.a Polygon.a Circle.a Rectangle.a Car.a
 
 run: clean trabalhocg
 	./trabalhocg ${ARGS}

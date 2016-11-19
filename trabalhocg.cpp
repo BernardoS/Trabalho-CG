@@ -1,6 +1,6 @@
 #include "lib/tinyxml2.h"
-#include "lib/CImg.h"
 #include "lib/Point.h"
+#include "lib/CImg.h"
 #include "lib/Circle.h"
 #include "lib/Rectangle.h"
 #include "lib/Car.h"
@@ -37,6 +37,18 @@ double relativeY(double y) {
 	return double(std::abs(height-y))/height;
 }
 
+GLuint loadTexture(const char* filename){
+    GLuint texture;
+    CImg<unsigned char> image(filename);
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,GL_MODULATE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.width(), image.height(), 0, GL_RGB, GL_UNSIGNED_BYTE, image.data());
+    return texture;
+}
+
 double X;
 double Y;
 double carSpeed = 0.1;
@@ -47,8 +59,6 @@ double enemyShotFreq = 0.0005;
 int shotsTaken = 0;
 
 Point* p = new Point();
-Rectangle* shot = new Rectangle(0.0);
-double shotPos = 0;
 std::vector<Circle*> shots;
 std::vector<Circle*> enemiesShots;
 std::vector<Car*> Inimigos;
@@ -56,6 +66,8 @@ Rectangle* LargadaChegada = new Rectangle();
 Circle Arena[2];
 Car* Jogador = new Car();
 std::vector<double> decayingAngle;
+
+GLuint floorTexture;
 
 std::string readXml(XMLDocument &doc) {
   XMLElement* aplicacao = doc.FirstChildElement("aplicacao");
@@ -367,10 +379,20 @@ void idleFunc() {
 }
 
 void init() {
+	glEnable(GL_DEPTH_TEST);
+	glEnable( GL_TEXTURE_2D );
+	// glEnable(GL_LIGHTING);
+	glShadeModel (GL_SMOOTH);
+	glDepthFunc(GL_LEQUAL);
+	// glEnable(GL_LIGHT0);
+
   glClearColor(1,1,1,0);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
 	glOrtho(0, 1, 0, 1, -1, 1);
+
+	floorTexture = loadTexture("textures/floor.jpg");
+	Arena[0].texture(floorTexture);
 }
 
 int main(int argc, char **argv) {
