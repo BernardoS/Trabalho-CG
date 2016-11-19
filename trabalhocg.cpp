@@ -156,10 +156,26 @@ void keyUpFunc(unsigned char c, int i1, int i2) {
 void keyPressFunc(unsigned char c, int i1, int i2) {
   keyPressed[int(c)] = true;
 }
+
+double camDist = -0.75;
+double camXYAngle = 0;
+double camXZAngle = 0;
+bool toggleCam = false;
 void displayFunc(){
 	glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glClear (GL_COLOR_BUFFER_BIT);
+
+	if (keyPressed['t']) {
+		toggleCam = true;
+	}
+
+	if(toggleCam) {
+		// glTranslatef(0,0,-camDist);
+		// glRotatef(camXZAngle,0.5,0,0);
+		// glRotatef(camXYAngle,0,0.5,0);
+		gluLookAt( 2,2,10, 0,0,0, 1,0,0 ); // de 3 em 3, camera position, camera looking at, up vector
+	}
 	Point* center = Arena[0].position();
 	printTime(0);
 	glPushMatrix();
@@ -251,6 +267,9 @@ void updatePlayer(double timeDiff) {
 }
 
 double mouseX = 0;
+int lastX = 0;
+int lastY = 0;
+int buttonDown = 0;
 void motionFunc(int x, int y) {
 	double relative = relativeX(x);
 	if (relative > mouseX) Jogador->moveCannon(-1);
@@ -259,8 +278,32 @@ void motionFunc(int x, int y) {
 }
 
 void mouseFunc(int button, int state, int x, int y) {
-	if (button == 0 && state == 1)
+	if (button == 0 && state == 1) {
+		buttonDown = 0;
 		shots.push_back(Jogador->shoot());
+	}
+	if (button == GLUT_LEFT_BUTTON &&
+					state == GLUT_DOWN) {
+						lastX = x;
+						lastY = y;
+						buttonDown = 1;
+	}
+}
+
+void mouse_motion(int x, int y)
+{
+    if (!buttonDown)
+        return;
+
+    camXYAngle += x - lastX;
+    camXZAngle += y - lastY;
+
+    camXYAngle = (int)camXYAngle % 360;
+    camXZAngle = (int)camXZAngle % 360;
+
+    lastX = x;
+    lastY = y;
+    glutPostRedisplay();
 }
 
 void updateShot(double timeDiff) {
@@ -422,6 +465,7 @@ int main(int argc, char **argv) {
 	glutDisplayFunc(displayFunc);
 	glutMouseFunc(mouseFunc);
 	glutPassiveMotionFunc(motionFunc);
+	glutMotionFunc(mouse_motion);
 	glutIdleFunc(idleFunc);
 	glutMainLoop();
   return 0;
