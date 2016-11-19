@@ -97,22 +97,22 @@ void readSvg(XMLDocument &doc) {
 			current->QueryDoubleAttribute( "r", &r);
 			const char* fill = current->Attribute("fill");
 			if (strcmp(fill, "red") == 0) {
-				double color[3] = {1,0,0};
+				GLfloat color[3] = {1,0,0};
 				Car* Inimigo = new Car(new Circle(relativeX(r), color));
 				Inimigo->position(relativeX(cx), relativeY(cy));
 				Inimigos.push_back(Inimigo);
 			} else if (strcmp(fill, "blue") == 0) {
 				window.width = r*2;
 				window.height = r*2;
-				double color[3] = {0,0,1};
+				GLfloat color[3] = {0,0,1};
 				Arena[0] = *(new Circle(relativeX(r),color));
 				Arena[0].position(relativeX(cx), relativeY(cy));
 			} else if (strcmp(fill, "white") == 0) {
-				double color[3] = {1,1,1};
+				GLfloat color[3] = {1,1,1};
 				Arena[1] = *(new Circle(relativeX(r), color));
 				Arena[1].position(relativeX(cx), relativeY(cy));
 			} else if (strcmp(fill, "green") == 0) {
-				double color[3] = {0,1,0};
+				GLfloat color[3] = {0,1,0};
 				Jogador = new Car(new Circle(relativeX(r),color));
 				Jogador->position(relativeX(cx), relativeY(cy));
 			}
@@ -122,7 +122,7 @@ void readSvg(XMLDocument &doc) {
 			current->QueryDoubleAttribute( "y", &y);
 			current->QueryDoubleAttribute( "width", &width);
 			current->QueryDoubleAttribute( "height", &height);
-			double color[3] = {0,0,0};
+			GLfloat color[3] = {0,0,0};
 			LargadaChegada = new Rectangle(relativeX(width),relativeX(height),color);
 			LargadaChegada->position(relativeX(x) + LargadaChegada->width/2.0, relativeY(y) - LargadaChegada->height/2.0);
 		}
@@ -381,10 +381,10 @@ void idleFunc() {
 void init() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable( GL_TEXTURE_2D );
-	// glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHTING);
 	glShadeModel (GL_SMOOTH);
 	glDepthFunc(GL_LEQUAL);
-	// glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT0);
 
   glClearColor(1,1,1,0);
   glMatrixMode(GL_PROJECTION);

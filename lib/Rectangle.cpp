@@ -3,7 +3,7 @@
 #include "Point.h"
 #include <iostream>
 
-Rectangle::Rectangle (double width, double height,double color[3]) : Polygon(new Point(), color){
+Rectangle::Rectangle (double width, double height, GLfloat color[3]) : Polygon(new Point(), color){
   this->width = width;
   this->height = height;
 }

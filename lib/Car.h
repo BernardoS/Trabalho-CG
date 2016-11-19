@@ -5,6 +5,7 @@
 #include "Rectangle.h"
 #include "Point.h"
 #include <vector>
+#include <GL/gl.h>
 
 class Car : public Circle{
 private:
@@ -17,7 +18,7 @@ private:
   double wheelAngle;
   void makeCannon();
   void makeAxis();
-  void makeBody(double color[3]);
+  void makeBody(GLfloat color[3]);
   void makeWheels();
   void positionCannon();
   void positionWheels();

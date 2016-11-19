@@ -3,6 +3,7 @@
 
 #include "Point.h"
 #include "Polygon.h"
+#include <GL/gl.h>
 
 class Rectangle : public Polygon {
 public:
@@ -11,7 +12,7 @@ public:
   double height;
   Rectangle ();
 	Rectangle (double side);
-	Rectangle (double width, double height, double color[3]);
+	Rectangle (double width, double height, GLfloat color[3]);
 	void draw();
 };
 

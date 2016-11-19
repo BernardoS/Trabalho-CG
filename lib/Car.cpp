@@ -3,46 +3,47 @@
 #include "Point.h"
 #include <iostream>
 #include <vector>
+#include <GL/gl.h>
 
-void Car::makeBody(double color[3]) {
+void Car::makeBody(GLfloat color[3]) {
   angle = 0;
   double height = (radius*sqrt(2));
   body = new Rectangle(height/3, height, color);
 }
 void Car::makeCannon() {
-  double color[3] = {27/256.0,94/256.0,32/256.0};
+  GLfloat color[3] = {27/256.0,94/256.0,32/256.0};
   double width = body->width/2.0;
   cannon = new Rectangle(width/2.0, width*2, color);
 }
 
 void Car::makeWheels() {
   //Wheels
-  double colorWheel[3] = {66/256.0,66/256.0,66/256.0};
+  GLfloat colorWheel[3] = {66/256.0,66/256.0,66/256.0};
   for (size_t i = 0; i < 4; i++) {
     wheels[i] = *(new Rectangle(body->width/2.0, body->height/3, colorWheel));
     //Cracks
-    double colorCrack[3] = {158/256.0, 158/256.0, 158/256.0};
+    GLfloat colorCrack[3] = {158/256.0, 158/256.0, 158/256.0};
     for (size_t j = 0; j < 4; j++) {
       cracks[i].push_back(new Rectangle(wheels[i].width, wheels[i].height/10.0, colorCrack));
     }
   }
 }
 void Car::makeAxis() {
-  double color[3] = {33/256.0,33/256.0,33/256.0};
+  GLfloat color[3] = {33/256.0,33/256.0,33/256.0};
   double width = body->width/2.0;
   for (size_t i = 0; i < 4; i++) {
     axis[i] = *(new Rectangle(width, width/2.0,color));
   }
 }
 Car::Car () : Circle(){
-  double color[3] = {139/256.0,195/256.0,74/256.0};
+  GLfloat color[3] = {139/256.0,195/256.0,74/256.0};
   makeBody(color);
   makeAxis();
   makeCannon();
   makeWheels();
 }
 Car::Car (double radius) : Circle(radius){
-  double color[3] = {139/256.0,195/256.0,74/256.0};
+  GLfloat color[3] = {139/256.0,195/256.0,74/256.0};
   makeBody(color);
   makeAxis();
   makeCannon();
@@ -96,7 +97,7 @@ void Car::moveCracks(double speed) {
       double y = cracks[i][j]->position()->y + speed;
       cracks[i][j]->position(0,y);
       double distanceFromCenterOfWheel = cracks[i][j]->position()->y + -wheels[i].height/2.0 + wheels[i].height/3.0*(j%4);
-      double color[3] = {158/256.0, 158/256.0, 158/256.0};
+      GLfloat color[3] = {158/256.0, 158/256.0, 158/256.0};
       if(distanceFromCenterOfWheel > wheels[i].height/2.0) {
         cracks[i].erase(cracks[i].begin() + j);
         cracks[i].push_back(new Rectangle(wheels[i].width, wheels[i].height/10.0, color));

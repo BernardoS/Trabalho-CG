@@ -14,7 +14,7 @@ Polygon::Polygon(GLuint texture){
   tex = texture;
 }
 
-Polygon::Polygon(Point* pos, double color[3]){
+Polygon::Polygon(Point* pos, GLfloat color[3]){
   for (size_t i = 0; i < 3; i++) this->color[i] = color[i];
   this->pos = pos;
 }

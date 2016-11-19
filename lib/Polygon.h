@@ -10,16 +10,22 @@ class Polygon {
 private:
 	Point* pos;
 	GLuint tex;
+	GLfloat materialEmission[];
+	GLfloat materialAmbient[];
+	GLfloat materialDifuse[];
+	GLfloat materialSpecular[];
+	GLfloat materialShininess[];
 public:
-	double color[3];
+	GLfloat color[3];
   Polygon ();
 	Polygon(GLuint texture);
 	Polygon (Point* pos);
-	Polygon (Point* pos, double color[3]);
+	Polygon (Point* pos, GLfloat color[3]);
 	Polygon(Polygon* polygon);
 	void position(double x , double y);
 	void position(Point* newPos);
 	Point* position();
+	// Material stuff
 	void texture(GLuint tex);
 	GLuint texture();
 };
