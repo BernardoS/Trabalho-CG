@@ -1,6 +1,5 @@
 #include "lib/tinyxml2.h"
 #include "lib/Point.h"
-#include "lib/CImg.h"
 #include "lib/Circle.h"
 #include "lib/Rectangle.h"
 #include "lib/Car.h"
@@ -10,13 +9,13 @@
 #include <cmath>
 #include <vector>
 #include <string.h>
+#include "lib/bmpread.h"
 
 bool keyPressed[256];
 bool gameOn = false;
 bool gameOver = false;
 
 using namespace tinyxml2;
-using namespace cimg_library;
 #ifndef XMLCheckResult
 	#define XMLCheckResult(a_eResult) if (a_eResult != XML_SUCCESS) { printf("Error: %i\n", a_eResult); return a_eResult; }
 #endif
@@ -38,15 +37,19 @@ double relativeY(double y) {
 }
 
 GLuint loadTexture(const char* filename){
-    GLuint texture;
-    CImg<unsigned char> image(filename);
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,GL_MODULATE);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.width(), image.height(), 0, GL_RGB, GL_UNSIGNED_BYTE, image.data());
-    return texture;
+	GLuint texture = 0;
+	bmpread_t bitmap;
+	if(!bmpread(filename, 0, &bitmap)){
+			fprintf(stderr, "%s: error loading bitmap file\n", filename);
+			exit(1);
+	}
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, bitmap.width, bitmap.height, 0, GL_RGB, GL_UNSIGNED_BYTE, bitmap.rgb_data);
+	bmpread_free(&bitmap);
+	return texture;
 }
 
 double X;
@@ -68,6 +71,8 @@ Car* Jogador = new Car();
 std::vector<double> decayingAngle;
 
 GLuint floorTexture;
+GLuint carTexture;
+GLuint startTexture;
 
 std::string readXml(XMLDocument &doc) {
   XMLElement* aplicacao = doc.FirstChildElement("aplicacao");
@@ -93,10 +98,10 @@ void makeArena(const char* fill, double r, double x, double y){
 
 		GLfloat color[3] = {0,0,1};
 		GLfloat materialEmission[] = {0.10, 0.10, 0.10, 1};
-    GLfloat materialAmbient[] = {0, 0, 1, 0.2};
-    GLfloat materialDifuse[] = {0, 0, 1, 0.2};
-    GLfloat materialSpecular[] = {0, 0, 0, 1};
-    GLfloat materialShininess[] = {0.0 };
+		GLfloat materialAmbient[] = {0.2, 0.2, 0.2, 1};
+    GLfloat materialDifuse[] = {0.7, 0.7, 0.7, 1};
+    GLfloat materialSpecular[] = {0, 0, 0, 0};
+    GLfloat materialShininess[] = {0.0};
 
 		Arena[0] = *(new Circle(relativeX(r),color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess));
 		Arena[0].position(relativeX(x), relativeY(y));
@@ -115,14 +120,28 @@ void makeArena(const char* fill, double r, double x, double y){
 }
 void makeEnemy(double r, double x, double y){
 	GLfloat color[3] = {1,0,0};
-	Car* Inimigo = new Car(new Circle(relativeX(r), color));
+
+	GLfloat materialEmission[] = {0.10, 0.10, 0.10, 1};
+	GLfloat materialAmbient[] = {1, 0, 0, 0.2};
+	GLfloat materialDifuse[] = {1, 0, 0, 0.2};
+	GLfloat materialSpecular[] = { 0, 0, 0, 1};
+	GLfloat materialShininess[] = { 0.0 };
+
+	Car* Inimigo = new Car(new Circle(relativeX(r), color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess));
 	Inimigo->position(relativeX(x), relativeY(y));
 	Inimigos.push_back(Inimigo);
 }
 
 void makePlayer(double r, double x, double y){
 	GLfloat color[3] = {0,1,0};
-	Jogador = new Car(new Circle(relativeX(r),color));
+
+	GLfloat materialEmission[] = {0.10, 0.10, 0.10, 1};
+	GLfloat materialAmbient[] = {0.2, 0.2, 0.2, 1};
+	GLfloat materialDifuse[] = {0.7, 0.7, 0.7, 1};
+	GLfloat materialSpecular[] = {0, 0, 0, 0};
+	GLfloat materialShininess[] = {0.0};
+
+	Jogador = new Car(new Circle(relativeX(r), color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess));
 	Jogador->position(relativeX(x), relativeY(y));
 }
 
@@ -152,7 +171,12 @@ void readSvg(XMLDocument &doc) {
 			current->QueryDoubleAttribute( "width", &width);
 			current->QueryDoubleAttribute( "height", &height);
 			GLfloat color[3] = {0,0,0};
-			LargadaChegada = new Rectangle(relativeX(width),relativeX(height),color);
+			GLfloat materialEmission[] = {0.10, 0.10, 0.10, 1};
+			GLfloat materialAmbient[] = {0, 0, 0, 0.2};
+			GLfloat materialDifuse[] = {0, 0, 0, 0.2};
+			GLfloat materialSpecular[] = {0, 0, 0, 1};
+			GLfloat materialShininess[] = {0.0};
+			LargadaChegada = new Rectangle(relativeX(width),relativeX(height),color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess);
 			LargadaChegada->position(relativeX(x) + LargadaChegada->width/2.0, relativeY(y) - LargadaChegada->height/2.0);
 		}
 		current = current->NextSiblingElement();
@@ -192,8 +216,10 @@ double camXZAngle = 0;
 bool toggleCam = false;
 void displayFunc(){
 	glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  glClear (GL_COLOR_BUFFER_BIT);
+
+	glClearColor (1,1,1,1.0);
+	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
 
 	if (keyPressed['t']) {
 		toggleCam = true;
@@ -458,13 +484,16 @@ void init() {
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_LIGHT0);
 
-  glClearColor(1,1,1,0);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
 	glOrtho(0, 1, 0, 1, -1, 1);
 
-	floorTexture = loadTexture("textures/floor.jpg");
+	floorTexture = loadTexture("textures/floor.bmp");
+	// startTexture = loadTexture("textures/start.bmp");
+	carTexture = loadTexture("textures/car.bmp");
 	Arena[0].texture(floorTexture);
+	// LargadaChegada->texture(startTexture);
+	Jogador->texture(carTexture);
 }
 
 int main(int argc, char **argv) {

@@ -29,11 +29,16 @@ Polygon::Polygon (Point* pos, GLfloat color[3], GLuint tex, GLfloat* emission, G
   for (size_t i = 0; i < 3; i++) this->color[i] = color[i];
   this->pos = pos;
   this->tex = tex;
-  materialEmission = vector<GLfloat>(emission, emission + 4);
-  materialAmbient = vector<GLfloat>(ambient, ambient + 4);
-  materialDifuse = vector<GLfloat>(difuse, difuse + 4);
-  materialSpecular = vector<GLfloat>(specular, specular + 4);
-  materialShininess = vector<GLfloat>(specular, specular + 1);
+  if(emission != NULL)
+    materialEmission = vector<GLfloat>(emission, emission + 4);
+  if(ambient != NULL)
+    materialAmbient = vector<GLfloat>(ambient, ambient + 4);
+  if(difuse != NULL)
+    materialDifuse = vector<GLfloat>(difuse, difuse + 4);
+  if(specular != NULL)
+    materialSpecular = vector<GLfloat>(specular, specular + 4);
+  if(shininess != NULL)
+    materialShininess = vector<GLfloat>(specular, specular + 1);
 }
 
 Polygon::Polygon(Point* pos){

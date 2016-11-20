@@ -2,10 +2,10 @@ all: trabalhocg staticlib
 
 rebuild: clean all
 
-trabalhocg: trabalhocg.cpp Point.a Polygon.a Circle.a Rectangle.a Car.a libtinyxml2.a -lglut -lGLU -lGL -lX11 -lpthread
+trabalhocg: trabalhocg.cpp Point.a Polygon.a Circle.a Rectangle.a Car.a libbmpread.a libtinyxml2.a -lglut -lGLU -lGL -lX11 -lpthread
 
 clean:
-	$(RM) ./lib/*.o *.o trabalhocg libtinyxml2.a Point.a Polygon.a Circle.a Rectangle.a Car.a
+	$(RM) ./lib/*.o *.o trabalhocg libbmpread.a libtinyxml2.a Point.a Polygon.a Circle.a Rectangle.a Car.a
 
 run: clean trabalhocg
 	./trabalhocg ${ARGS}
@@ -16,6 +16,11 @@ libtinyxml2.a: ./lib/tinyxml2.o
 	$(AR) $(ARFLAGS) $@ $^
 
 tinyxml2.o: ./lib/tinyxml2.cpp ./lib/tinyxml2.h
+
+libbmpread.a: ./lib/bmpread.o
+	$(AR) $(ARFLAGS) $@ $^
+
+bmpread.o: ./lib/bmpread.c ./lib/bmpread.h
 
 Point.a: ./lib/Point.o
 	$(AR) $(ARFLAGS) $@ $^

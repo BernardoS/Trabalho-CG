@@ -8,19 +8,30 @@
 void Car::makeBody(GLfloat color[3]) {
   angle = 0;
   double height = (radius*sqrt(2));
-  body = new Rectangle(height/3, height, color);
+  body = new Rectangle(height/3, height, color, Circle::texture(), emission(), ambient(), difuse(), specular(), shininess());
 }
 void Car::makeCannon() {
   GLfloat color[3] = {27/256.0,94/256.0,32/256.0};
+  GLfloat emission[] = {0.10, 0.10, 0.10, 1};
+	GLfloat ambient[] = {color[0], color[1], color[2], 0.2};
+	GLfloat difuse[] = {color[0], color[1], color[2], 0.2};
+	GLfloat specular[] = {0, 0, 0, 1};
+	GLfloat shininess[] = {0.0};
   double width = body->width/2.0;
-  cannon = new Rectangle(width/2.0, width*2, color);
+  cannon = new Rectangle(width/2.0, width*2, color, 0, emission, ambient, difuse, specular, shininess);
 }
 
 void Car::makeWheels() {
   //Wheels
   GLfloat colorWheel[3] = {66/256.0,66/256.0,66/256.0};
+  GLfloat emissionWheel[] = {0.10, 0.10, 0.10, 1};
+	GLfloat ambientWheel[] = {colorWheel[0], colorWheel[1], colorWheel[2], 0.2};
+	GLfloat difuseWheel[] = {colorWheel[0], colorWheel[1], colorWheel[2], 0.2};
+	GLfloat specularWheel[] = {0, 0, 0, 1};
+	GLfloat shininessWheel[] = {0.0};
+
   for (size_t i = 0; i < 4; i++) {
-    wheels[i] = *(new Rectangle(body->width/2.0, body->height/3, colorWheel));
+    wheels[i] = *(new Rectangle(body->width/2.0, body->height/3, colorWheel, 0, emissionWheel, ambientWheel, difuseWheel, specularWheel, shininessWheel));
     //Cracks
     GLfloat colorCrack[3] = {158/256.0, 158/256.0, 158/256.0};
     for (size_t j = 0; j < 4; j++) {
@@ -30,9 +41,14 @@ void Car::makeWheels() {
 }
 void Car::makeAxis() {
   GLfloat color[3] = {33/256.0,33/256.0,33/256.0};
+  GLfloat emission[] = {0.10, 0.10, 0.10, 1};
+	GLfloat ambient[] = {color[0], color[1], color[2], 0.2};
+	GLfloat difuse[] = {color[0], color[1], color[2], 0.2};
+	GLfloat specular[] = {0, 0, 0, 1};
+	GLfloat shininess[] = {0.0};
   double width = body->width/2.0;
   for (size_t i = 0; i < 4; i++) {
-    axis[i] = *(new Rectangle(width, width/2.0,color));
+    axis[i] = *(new Rectangle(width, width/2.0,color, 0, emission, ambient, difuse, specular, shininess));
   }
 }
 Car::Car () : Circle(){
@@ -146,9 +162,21 @@ Point* Car::position() {
   return Circle::position();
 }
 
+void Car::texture(GLuint tex){
+  Circle::texture(tex);
+  body->texture(tex);
+}
+
 
 Circle* Car::shoot() {
-  Circle* shot = new Circle(0.005);
+  GLfloat materialEmission[] = {0.10, 0.10, 0.10, 1};
+	GLfloat materialAmbient[] = {0, 0, 0, 0.2};
+	GLfloat materialDifuse[] = {0, 0, 0, 0.2};
+	GLfloat materialSpecular[] = {0, 0, 0, 1};
+	GLfloat materialShininess[] = {0.0};
+  GLfloat color[3] = {0,0,0};
+
+  Circle* shot = new Circle(0.005, color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess);
   shot->position(new Point(position()));
   double radians = cannon->angle* 0.0174533;
   double initX = sin(-radians)*(cannon->height/2.0 + 0.005/2.0) + sin(-radians)*cannon->width;

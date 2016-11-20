@@ -26,7 +26,7 @@ Circle::Circle (double radius) : Polygon(new Point()){
   this->radius = radius;
   angle = 0;
 }
-Circle::Circle (Circle* circle) : Polygon(circle->position(), circle->color){
+Circle::Circle (Circle* circle) : Polygon(circle->position(), circle->color, circle->texture(), circle->emission(), circle->ambient(), circle->difuse(), circle->specular(), circle->shininess()){
   radius = circle->radius;
   angle = 0;
 }
