@@ -12,9 +12,9 @@ void Car::makeBody(GLfloat color[3]) {
 }
 void Car::makeCannon() {
   GLfloat color[3] = {27/256.0,94/256.0,32/256.0};
-  GLfloat emission[] = {0.10, 0.10, 0.10, 1};
-	GLfloat ambient[] = {color[0], color[1], color[2], 0.2};
-	GLfloat difuse[] = {color[0], color[1], color[2], 0.2};
+  GLfloat emission[] = {color[0], color[1], color[2], 1};
+	GLfloat ambient[] = {color[0], color[1], color[2], 1};
+	GLfloat difuse[] = {color[0], color[1], color[2], 1};
 	GLfloat specular[] = {0, 0, 0, 1};
 	GLfloat shininess[] = {0.0};
   double width = body->width/2.0;
@@ -24,9 +24,9 @@ void Car::makeCannon() {
 void Car::makeWheels() {
   //Wheels
   GLfloat colorWheel[3] = {66/256.0,66/256.0,66/256.0};
-  GLfloat emissionWheel[] = {0.10, 0.10, 0.10, 1};
-	GLfloat ambientWheel[] = {colorWheel[0], colorWheel[1], colorWheel[2], 0.2};
-	GLfloat difuseWheel[] = {colorWheel[0], colorWheel[1], colorWheel[2], 0.2};
+  GLfloat emissionWheel[] = {colorWheel[0], colorWheel[1], colorWheel[2], 1};
+	GLfloat ambientWheel[] = {colorWheel[0], colorWheel[1], colorWheel[2], 1};
+	GLfloat difuseWheel[] = {colorWheel[0], colorWheel[1], colorWheel[2], 1};
 	GLfloat specularWheel[] = {0, 0, 0, 1};
 	GLfloat shininessWheel[] = {0.0};
 
@@ -41,9 +41,9 @@ void Car::makeWheels() {
 }
 void Car::makeAxis() {
   GLfloat color[3] = {33/256.0,33/256.0,33/256.0};
-  GLfloat emission[] = {0.10, 0.10, 0.10, 1};
-	GLfloat ambient[] = {color[0], color[1], color[2], 0.2};
-	GLfloat difuse[] = {color[0], color[1], color[2], 0.2};
+  GLfloat emission[] = {color[0], color[1], color[2], 1};
+	GLfloat ambient[] = {color[0], color[1], color[2], 1};
+	GLfloat difuse[] = {color[0], color[1], color[2], 1};
 	GLfloat specular[] = {0, 0, 0, 1};
 	GLfloat shininess[] = {0.0};
   double width = body->width/2.0;
@@ -170,8 +170,8 @@ void Car::texture(GLuint tex){
 
 Circle* Car::shoot() {
   GLfloat materialEmission[] = {0.10, 0.10, 0.10, 1};
-	GLfloat materialAmbient[] = {0, 0, 0, 0.2};
-	GLfloat materialDifuse[] = {0, 0, 0, 0.2};
+	GLfloat materialAmbient[] = {0, 0, 0, 1};
+	GLfloat materialDifuse[] = {0, 0, 0, 1};
 	GLfloat materialSpecular[] = {0, 0, 0, 1};
 	GLfloat materialShininess[] = {0.0};
   GLfloat color[3] = {0,0,0};

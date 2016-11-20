@@ -51,7 +51,7 @@ void Circle::draw() {
         float angle = 2.0 * 3.1415926 * i / n;
         float x = radius * cos(angle);
         float y = radius * sin(angle);
-        // glNormal3f(0, 0, 1);
+        glNormal3f(0, 1, 0);
         glTexCoord2f(x, y);
         glVertex3f(x, y,0);
       }

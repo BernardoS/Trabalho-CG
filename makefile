@@ -5,7 +5,7 @@ rebuild: clean all
 trabalhocg: trabalhocg.cpp Point.a Polygon.a Circle.a Rectangle.a Car.a libbmpread.a libtinyxml2.a -lglut -lGLU -lGL -lX11 -lpthread
 
 clean:
-	$(RM) ./lib/*.o *.o trabalhocg libbmpread.a libtinyxml2.a Point.a Polygon.a Circle.a Rectangle.a Car.a
+	$(RM) ./lib/*.h.gch ./lib/*.o *.o trabalhocg libbmpread.a libtinyxml2.a Point.a Polygon.a Circle.a Rectangle.a Car.a
 
 run: clean trabalhocg
 	./trabalhocg ${ARGS}

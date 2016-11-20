@@ -14,6 +14,7 @@
 bool keyPressed[256];
 bool gameOn = false;
 bool gameOver = false;
+bool nightMode = false;
 
 using namespace tinyxml2;
 #ifndef XMLCheckResult
@@ -97,22 +98,23 @@ void makeArena(const char* fill, double r, double x, double y){
 		window.height = r*2;
 
 		GLfloat color[3] = {0,0,1};
-		GLfloat materialEmission[] = {0.10, 0.10, 0.10, 1};
-		GLfloat materialAmbient[] = {0.2, 0.2, 0.2, 1};
-    GLfloat materialDifuse[] = {0.7, 0.7, 0.7, 1};
-    GLfloat materialSpecular[] = {0, 0, 0, 0};
-    GLfloat materialShininess[] = {0.0};
+
+		GLfloat materialEmission[] = {0.7, 0.7, 0.7, 1};
+		GLfloat materialAmbient[] = {0.5, 0.5, 0.5, 1};
+		GLfloat materialDifuse[] = {0.5, 0.5, 0.5, 1};
+		GLfloat materialSpecular[] = {0, 0, 0, 1};
+		GLfloat materialShininess[] = {0.0};
 
 		Arena[0] = *(new Circle(relativeX(r),color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess));
 		Arena[0].position(relativeX(x), relativeY(y));
 	} else {
 		GLfloat color[3] = {1,1,1};
 
-		GLfloat materialEmission[] = {0.10, 0.10, 0.10, 1};
-		GLfloat materialAmbient[] = {1, 1, 1, 0.2};
-		GLfloat materialDifuse[] = {1, 1, 1, 0.2};
-		GLfloat materialSpecular[] = { 0, 0, 0, 1};
-		GLfloat materialShininess[] = { 0.0 };
+		GLfloat materialEmission[] = {0, 0, 0, 1};
+		GLfloat materialAmbient[] = {0, 0, 0, 1};
+		GLfloat materialDifuse[] = {0, 0, 0, 1};
+		GLfloat materialSpecular[] = {0, 0, 0, 0};
+		GLfloat materialShininess[] = {0.0};
 
 		Arena[1] = *(new Circle(relativeX(r), color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess));
 		Arena[1].position(relativeX(x), relativeY(y));
@@ -121,11 +123,11 @@ void makeArena(const char* fill, double r, double x, double y){
 void makeEnemy(double r, double x, double y){
 	GLfloat color[3] = {1,0,0};
 
-	GLfloat materialEmission[] = {0.10, 0.10, 0.10, 1};
-	GLfloat materialAmbient[] = {1, 0, 0, 0.2};
-	GLfloat materialDifuse[] = {1, 0, 0, 0.2};
-	GLfloat materialSpecular[] = { 0, 0, 0, 1};
-	GLfloat materialShininess[] = { 0.0 };
+	GLfloat materialEmission[] = {1, 0, 0, 1};
+	GLfloat materialAmbient[] = {1, 0, 0, 1};
+	GLfloat materialDifuse[] = {1, 0, 0, 1};
+	GLfloat materialSpecular[] = {1, 0, 0, 1};
+	GLfloat materialShininess[] = {100.0};
 
 	Car* Inimigo = new Car(new Circle(relativeX(r), color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess));
 	Inimigo->position(relativeX(x), relativeY(y));
@@ -135,11 +137,11 @@ void makeEnemy(double r, double x, double y){
 void makePlayer(double r, double x, double y){
 	GLfloat color[3] = {0,1,0};
 
-	GLfloat materialEmission[] = {0.10, 0.10, 0.10, 1};
-	GLfloat materialAmbient[] = {0.2, 0.2, 0.2, 1};
-	GLfloat materialDifuse[] = {0.7, 0.7, 0.7, 1};
-	GLfloat materialSpecular[] = {0, 0, 0, 0};
-	GLfloat materialShininess[] = {0.0};
+	GLfloat materialEmission[] = {0, 1, 0, 1};
+	GLfloat materialAmbient[] = {0, 1, 0, 1};
+	GLfloat materialDifuse[] = {0, 1, 0, 1};
+	GLfloat materialSpecular[] = {0, 1, 0, 1};
+	GLfloat materialShininess[] = {100.0};
 
 	Jogador = new Car(new Circle(relativeX(r), color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess));
 	Jogador->position(relativeX(x), relativeY(y));
@@ -171,9 +173,9 @@ void readSvg(XMLDocument &doc) {
 			current->QueryDoubleAttribute( "width", &width);
 			current->QueryDoubleAttribute( "height", &height);
 			GLfloat color[3] = {0,0,0};
-			GLfloat materialEmission[] = {0.10, 0.10, 0.10, 1};
-			GLfloat materialAmbient[] = {0, 0, 0, 0.2};
-			GLfloat materialDifuse[] = {0, 0, 0, 0.2};
+			GLfloat materialEmission[] = {0.1, 0.1, 0.1, 1};
+			GLfloat materialAmbient[] = {0, 0, 0, 1};
+			GLfloat materialDifuse[] = {0, 0, 0, 1};
 			GLfloat materialSpecular[] = {0, 0, 0, 1};
 			GLfloat materialShininess[] = {0.0};
 			LargadaChegada = new Rectangle(relativeX(width),relativeX(height),color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess);
@@ -205,6 +207,7 @@ void printTime(double timeDiff){
 
 void keyUpFunc(unsigned char c, int i1, int i2) {
   keyPressed[int(c)] = false;
+	if (c == 'n') nightMode = !nightMode;
 }
 void keyPressFunc(unsigned char c, int i1, int i2) {
   keyPressed[int(c)] = true;
@@ -214,16 +217,36 @@ double camDist = -0.75;
 double camXYAngle = 0;
 double camXZAngle = 0;
 bool toggleCam = false;
+
+void makeLight() {
+	GLfloat position[] = {0.0, 0.0, 1.0, 0.0};
+	GLfloat ambient[] = {1.0, 1.0, 0, 1};
+	GLfloat difuse[] = {1.0, 1.0, 0, 1};
+	GLfloat specular[] = {1.0, 1.0, 0, 1};
+	// GLfloat direction[] = {0.0, 0.0, -1.0};
+	glLightfv(GL_LIGHT1, GL_POSITION, position);
+	glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, difuse);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, specular);
+	// glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 2);
+	// glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 5);
+	// glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, direction);
+	// glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 2);
+}
+
 void displayFunc(){
 	glMatrixMode(GL_MODELVIEW);
 
-	glClearColor (1,1,1,1.0);
+
+	glClearColor (0, 0, 0,0);
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
 	if (keyPressed['t']) {
 		toggleCam = true;
 	}
+
+	makeLight();
 
 	if(toggleCam) {
 		// glTranslatef(0,0,-camDist);
@@ -273,7 +296,6 @@ void displayFunc(){
 	}
 	glutSwapBuffers();
 }
-
 
 bool canCircleMove(Circle* position) {
 	for (size_t i = 0; i < Inimigos.size(); i++) {
@@ -463,6 +485,14 @@ void updateEnemies(double timeDiff) {
 }
 
 void idleFunc() {
+	if (nightMode) {
+		glDisable(GL_LIGHT0);
+		glEnable(GL_LIGHT1);
+	}
+	else {
+		glEnable(GL_LIGHT0);
+		glDisable(GL_LIGHT1);
+	}
 	static GLdouble previousTime = 0;
 	GLdouble currentTime;
 	GLdouble timeDiference;
@@ -478,11 +508,13 @@ void idleFunc() {
 
 void init() {
 	glEnable(GL_DEPTH_TEST);
-	glEnable( GL_TEXTURE_2D );
+	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_LIGHTING);
-	glShadeModel (GL_SMOOTH);
+	glShadeModel(GL_SMOOTH);
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_LIGHT0);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -494,6 +526,9 @@ void init() {
 	Arena[0].texture(floorTexture);
 	// LargadaChegada->texture(startTexture);
 	Jogador->texture(carTexture);
+	for (size_t i = 0; i < Inimigos.size(); i++) {
+		Inimigos.at(i)->texture(carTexture);
+	}
 }
 
 int main(int argc, char **argv) {
@@ -514,7 +549,7 @@ int main(int argc, char **argv) {
 	svg.LoadFile(svgFile.c_str());
 	readSvg(svg);
 	glutInit(&argc,argv);
-	glutInitDisplayMode(GLUT_DOUBLE);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowSize(window.width, window.height);
   glutCreateWindow("Arena");
 	init();
