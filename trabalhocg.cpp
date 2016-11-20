@@ -99,7 +99,7 @@ void makeArena(const char* fill, double r, double x, double y){
 
 		GLfloat color[3] = {0,0,1};
 
-		GLfloat materialEmission[] = {0.7, 0.7, 0.7, 1};
+		GLfloat materialEmission[] = {0, 0, 0, 1};
 		GLfloat materialAmbient[] = {0.5, 0.5, 0.5, 1};
 		GLfloat materialDifuse[] = {0.5, 0.5, 0.5, 1};
 		GLfloat materialSpecular[] = {0, 0, 0, 1};
@@ -123,7 +123,7 @@ void makeArena(const char* fill, double r, double x, double y){
 void makeEnemy(double r, double x, double y){
 	GLfloat color[3] = {1,0,0};
 
-	GLfloat materialEmission[] = {1, 0, 0, 1};
+	GLfloat materialEmission[] = {0.1, 0, 0, 1};
 	GLfloat materialAmbient[] = {1, 0, 0, 1};
 	GLfloat materialDifuse[] = {1, 0, 0, 1};
 	GLfloat materialSpecular[] = {1, 0, 0, 1};
@@ -137,7 +137,7 @@ void makeEnemy(double r, double x, double y){
 void makePlayer(double r, double x, double y){
 	GLfloat color[3] = {0,1,0};
 
-	GLfloat materialEmission[] = {0, 1, 0, 1};
+	GLfloat materialEmission[] = {0, 0.1, 0, 1};
 	GLfloat materialAmbient[] = {0, 1, 0, 1};
 	GLfloat materialDifuse[] = {0, 1, 0, 1};
 	GLfloat materialSpecular[] = {0, 1, 0, 1};
@@ -173,9 +173,9 @@ void readSvg(XMLDocument &doc) {
 			current->QueryDoubleAttribute( "width", &width);
 			current->QueryDoubleAttribute( "height", &height);
 			GLfloat color[3] = {0,0,0};
-			GLfloat materialEmission[] = {0.1, 0.1, 0.1, 1};
-			GLfloat materialAmbient[] = {0, 0, 0, 1};
-			GLfloat materialDifuse[] = {0, 0, 0, 1};
+			GLfloat materialEmission[] = {0.1, 0.1, 0.1, 0.5};
+			GLfloat materialAmbient[] = {0, 0, 0, 0.5};
+			GLfloat materialDifuse[] = {0, 0, 0, 0.5};
 			GLfloat materialSpecular[] = {0, 0, 0, 1};
 			GLfloat materialShininess[] = {0.0};
 			LargadaChegada = new Rectangle(relativeX(width),relativeX(height),color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess);
@@ -219,17 +219,19 @@ double camXZAngle = 0;
 bool toggleCam = false;
 
 void makeLight() {
-	GLfloat position[] = {0.0, 0.0, 1.0, 0.0};
+	GLfloat position[] = {0.5, 0.5, 1.0, 1.0};
 	GLfloat ambient[] = {1.0, 1.0, 0, 1};
+	GLfloat ambientLight0[] = {1, 1, 1, 1};
 	GLfloat difuse[] = {1.0, 1.0, 0, 1};
 	GLfloat specular[] = {1.0, 1.0, 0, 1};
 	// GLfloat direction[] = {0.0, 0.0, -1.0};
 	glLightfv(GL_LIGHT1, GL_POSITION, position);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight0);
 	glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, difuse);
 	glLightfv(GL_LIGHT1, GL_SPECULAR, specular);
 	// glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 2);
-	// glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 5);
+	// glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 20);
 	// glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, direction);
 	// glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 2);
 }
@@ -487,11 +489,11 @@ void updateEnemies(double timeDiff) {
 void idleFunc() {
 	if (nightMode) {
 		glDisable(GL_LIGHT0);
-		glEnable(GL_LIGHT1);
+		// glEnable(GL_LIGHT1);
 	}
 	else {
 		glEnable(GL_LIGHT0);
-		glDisable(GL_LIGHT1);
+		// glDisable(GL_LIGHT1);
 	}
 	static GLdouble previousTime = 0;
 	GLdouble currentTime;
