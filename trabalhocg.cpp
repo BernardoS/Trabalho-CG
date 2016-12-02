@@ -278,7 +278,7 @@ void displayFunc(){
 		// glTranslatef(camX, camY, camDist);
 		// glRotatef(camXZAngle, 0.5, 0, 0);
 		// glRotatef(camXYAngle, 0, 0.5, 0);
-		Point popo = Jogador->position();
+		Point player_pos = Jogador->position();
 		glTranslatef(0.5, 0.5, 2);
 		gluLookAt( -1,0.5,2, 0.5,0.5,0, 0,0,1 ); // de 3 em 3, camera position, camera looking at, up vector
 		// gluPerspective(camAngle, 1, camNear, camFar); // fov, aspect ratio, near, far

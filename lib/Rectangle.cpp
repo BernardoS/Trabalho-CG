@@ -55,23 +55,60 @@ void Rectangle::draw() {
     glTranslatef(position()->x,position()->y,0);
     glRotatef(angle, 0, 0, 1);
     glColor3f(color[0],color[1],color[2]);
-    // glBegin(GL_QUADS);
-    //   glNormal3f(0, 1, 0);
-    //   glTexCoord3f(0, 0, 0);
-    //   glVertex3f(-width/2.0, -height/2.0, 0);
-    //
-    //   glNormal3f(0, 1, 0);
-    //   glTexCoord3f(0, 1, 0);
-    //   glVertex3f(-width/2.0, height/2.0, 0);
-    //
-    //   glNormal3f(0, 1, 0);
-    //   glTexCoord3f(1, 1, 0);
-    //   glVertex3f(width/2.0, height/2.0, 0);
-    //
-    //   glNormal3f(0, 1, 0);
-    //   glTexCoord3f(1, 0, 0);
-    //   glVertex3f(width/2.0, -height/2.0, 0);
-    // glEnd();
-    glutSolidCube(height);
+    glBegin(GL_QUADS);
+      glNormal3f(0, 1, 0);
+      glTexCoord3f(0, 0, 0);
+      glVertex3f(-width/2.0, -height/2.0, 0);
+
+      // glNormal3f(0, 1, 0);
+      glTexCoord3f(0, 1, 0);
+      glVertex3f(-width/2.0, height/2.0, 0);
+
+      // glNormal3f(0, 1, 0);
+      glTexCoord3f(1, 1, 0);
+      glVertex3f(width/2.0, height/2.0, 0);
+
+      // glNormal3f(0, 1, 0);
+      glTexCoord3f(1, 0, 0);
+      glVertex3f(width/2.0, -height/2.0, 0);
+    glEnd();
+    // glutSolidCube(height);
+  glPopMatrix();
+}
+
+void Rectangle::draw3d() {
+  GLfloat* materialEmission = emission();
+  GLfloat* materialAmbient = ambient();
+  GLfloat* materialDifuse = difuse();
+  GLfloat* materialSpecular = specular();
+  GLfloat* materialShininess = shininess();
+  glPushMatrix();
+    if (materialEmission != NULL) {
+      glMaterialfv(GL_FRONT, GL_EMISSION, materialEmission);
+    }
+    if (materialAmbient != NULL) glMaterialfv(GL_FRONT, GL_AMBIENT, materialAmbient);
+    if (materialDifuse != NULL) glMaterialfv(GL_FRONT, GL_DIFFUSE, materialDifuse);
+    if (materialSpecular != NULL) glMaterialfv(GL_FRONT, GL_SPECULAR, materialSpecular);
+    if (materialShininess != NULL) glMaterialfv(GL_FRONT, GL_SHININESS, materialShininess);
+    glBindTexture (GL_TEXTURE_2D, texture());
+    glTranslatef(position()->x, position()->y, 0);
+    glRotatef(angle, 0, 0, 1);
+    glColor3f(color[0], color[1], color[2]);
+    glBegin(GL_QUADS);
+      glNormal3f(0, 1, 0);
+
+      glTexCoord3f(0, 0, 0);
+      glVertex3f(-width/2.0, -height/2.0, 0);
+
+      glTexCoord3f(0, 1, 0);
+      glVertex3f(-width/2.0, height/2.0, 0);
+
+      glTexCoord3f(1, 1, 0);
+      glVertex3f(width/2.0, height/2.0, 0);
+
+      glTexCoord3f(1, 0, 0);
+      glVertex3f(width/2.0, -height/2.0, 0);
+    glEnd();
+    // glutSolidCube(height);
   glPopMatrix();
 }
