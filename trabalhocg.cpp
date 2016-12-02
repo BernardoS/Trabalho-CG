@@ -204,19 +204,46 @@ void printTime(double timeDiff){
 	glPopMatrix();
 }
 
+double camDist = 0;
+double camXYAngle = 0;
+double camXZAngle = 0;
+int camAngle = 0;
+double camX = 0;
+double camY = 0;
+bool toggleCam = false;
 
 void keyUpFunc(unsigned char c, int i1, int i2) {
   keyPressed[int(c)] = false;
 	if (c == 'n') nightMode = !nightMode;
+	if (c == 't') toggleCam = !toggleCam;
+	if (c == '+') {
+		camDist += 0.01;
+		printf("camDist = %.2f\n", camDist);
+	}
+	if (c == '-') {
+		camDist -= 0.01;
+		printf("camDist = %.2f\n", camDist);
+	}
+	if (c == 'j') {
+		camX += 0.01;
+		printf("camX = %.2f\n", camX);
+	}
+	if (c == 'k') {
+		camX -= 0.01;
+		printf("camX = %.2f\n", camX);
+	}
+	if (c == 'l') {
+		camY += 0.01;
+		printf("camY = %.2f\n", camY);
+	}
+	if (c == 'm') {
+		camY -= 0.01;
+		printf("camY = %.2f\n", camY);
+	}
 }
 void keyPressFunc(unsigned char c, int i1, int i2) {
   keyPressed[int(c)] = true;
 }
-
-double camDist = -0.75;
-double camXYAngle = 0;
-double camXZAngle = 0;
-bool toggleCam = false;
 
 void makeLight() {
 	GLfloat position[] = {0.5, 0.5, 1.0, 1.0};
@@ -244,17 +271,17 @@ void displayFunc(){
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
-	if (keyPressed['t']) {
-		toggleCam = true;
-	}
-
 	makeLight();
 
 	if(toggleCam) {
-		// glTranslatef(0,0,-camDist);
-		// glRotatef(camXZAngle,0.5,0,0);
-		// glRotatef(camXYAngle,0,0.5,0);
-		gluLookAt( 2,2,10, 0,0,0, 1,0,0 ); // de 3 em 3, camera position, camera looking at, up vector
+		// luiz
+		// glTranslatef(camX, camY, camDist);
+		// glRotatef(camXZAngle, 0.5, 0, 0);
+		// glRotatef(camXYAngle, 0, 0.5, 0);
+		Point popo = Jogador->position();
+		glTranslatef(0.5, 0.5, 2);
+		gluLookAt( -1,0.5,2, 0.5,0.5,0, 0,0,1 ); // de 3 em 3, camera position, camera looking at, up vector
+		// gluPerspective(camAngle, 1, camNear, camFar); // fov, aspect ratio, near, far
 	}
 	Point* center = Arena[0].position();
 	printTime(0);
@@ -262,7 +289,9 @@ void displayFunc(){
 	glTranslatef(relativeX(window.width)/2.0 - center->x, relativeX(window.height)/2.0 - center->y,0);
 	glPushMatrix();
 		Arena[0].draw();
+		// Arena[0].drawWall(); // luiz
 		Arena[1].draw();
+		// Arena[1].drawWall(); // luiz
 		LargadaChegada->draw();
 		for (size_t i = 0; i < Inimigos.size(); i++) {
 			Inimigos[i]->draw();

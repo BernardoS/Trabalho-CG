@@ -55,22 +55,23 @@ void Rectangle::draw() {
     glTranslatef(position()->x,position()->y,0);
     glRotatef(angle, 0, 0, 1);
     glColor3f(color[0],color[1],color[2]);
-    glBegin(GL_QUADS);
-      glNormal3f(0, 1, 0);
-      glTexCoord3f(0, 0, 0);
-      glVertex3f(-width/2.0, -height/2.0, 0);
-
-      glNormal3f(0, 1, 0);
-      glTexCoord3f(0, 1, 0);
-      glVertex3f(-width/2.0, height/2.0, 0);
-
-      glNormal3f(0, 1, 0);
-      glTexCoord3f(1, 1, 0);
-      glVertex3f(width/2.0, height/2.0, 0);
-
-      glNormal3f(0, 1, 0);
-      glTexCoord3f(1, 0, 0);
-      glVertex3f(width/2.0, -height/2.0, 0);
-    glEnd();
+    // glBegin(GL_QUADS);
+    //   glNormal3f(0, 1, 0);
+    //   glTexCoord3f(0, 0, 0);
+    //   glVertex3f(-width/2.0, -height/2.0, 0);
+    //
+    //   glNormal3f(0, 1, 0);
+    //   glTexCoord3f(0, 1, 0);
+    //   glVertex3f(-width/2.0, height/2.0, 0);
+    //
+    //   glNormal3f(0, 1, 0);
+    //   glTexCoord3f(1, 1, 0);
+    //   glVertex3f(width/2.0, height/2.0, 0);
+    //
+    //   glNormal3f(0, 1, 0);
+    //   glTexCoord3f(1, 0, 0);
+    //   glVertex3f(width/2.0, -height/2.0, 0);
+    // glEnd();
+    glutSolidCube(height);
   glPopMatrix();
 }

@@ -58,6 +58,27 @@ void Circle::draw() {
     glEnd();
   glPopMatrix();
 }
+
+void Circle::drawWall() {
+  // TODO needs to add attributes related to the material and light
+  glPushMatrix();
+
+  glTranslatef(position()->x, position()->y, 0);
+  glColor3f(color[0], color[1], color[2]);
+  glBegin(GL_LINE_LOOP);
+    const float n = 10000;
+    for(float i = 0; i < n; i++) {
+      float angle = 2.0 * 3.1415926 * i / n;
+      float x = radius * cos(angle);
+      float y = radius * sin(angle);
+      glTexCoord2f(x, y);
+      for(int j = 0; j < 20; j++) { glVertex3f(x, y, j); }
+    }
+  glEnd();
+
+  glPopMatrix();
+}
+
 bool Circle::in(double x, double y, double r) {
   double d1 = std::abs(pow((position()->x - x),2));
   double d2 = std::abs(pow((position()->y - y),2));

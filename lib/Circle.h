@@ -16,6 +16,7 @@ public:
 	Circle (double radius, GLfloat color[3], GLuint tex, GLfloat* emission, GLfloat* ambient, GLfloat* difuse, GLfloat* specular, GLfloat* shininess);
 	Circle(Circle* circle);
 	void draw();
+	void drawWall(); // luiz
 	bool in(double x, double y, double r);
 	bool in(Circle* circle);
 	bool out(double x, double y, double r);
