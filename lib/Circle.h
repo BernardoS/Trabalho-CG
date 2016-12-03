@@ -9,6 +9,7 @@ class Circle : public Polygon{
 public:
 	double angle;
 	double radius;
+	double z;
 	Circle();
 	Circle(double radius);
 	Circle (double radius, GLfloat color[3]);
@@ -21,6 +22,8 @@ public:
 	bool in(Circle* circle);
 	bool out(double x, double y, double r);
 	bool out(Circle* circle);
+	void depth(double newDepth);
+	double depth();
 };
 
 #endif // Circle_H

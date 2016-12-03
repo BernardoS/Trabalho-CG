@@ -3,6 +3,14 @@
 #include "Point.h"
 #include <iostream>
 
+void Circle::depth(double newDepth){
+  z = newDepth;
+}
+
+double Circle::depth(){
+  return z;
+}
+
 Circle::Circle () : Polygon(){
   this->radius = 1;
   angle = 0;
@@ -45,7 +53,6 @@ void Circle::draw() {
     glBindTexture (GL_TEXTURE_2D, texture());
     glTranslatef(position()->x,position()->y,0);
     glColor3f(color[0],color[1],color[2]);
-    const float wall = 0.3;
     const float n = 10000;
 
     // Tampa de baixo
@@ -65,14 +72,14 @@ void Circle::draw() {
     // Tampa de cima
     glBegin(GL_TRIANGLE_FAN);
       glTexCoord2f(0, 0);
-      glVertex3f(0, 0, wall);
+      glVertex3f(0, 0, z);
       for(float i = 0; i < n; i++){
         float angle = 2.0 * 3.1415926 * i / n;
         float x = radius * cos(angle);
         float y = radius * sin(angle);
-        glNormal3f(0, 1, 0);
+        glNormal3f(0, -1, 0);
         glTexCoord2f(x, y);
-        glVertex3f(x, y, wall);
+        glVertex3f(x, y, z);
       }
     glEnd();
 
@@ -87,8 +94,8 @@ void Circle::draw() {
         float nextY = radius * sin(nextAngle);
         // glNormal3f(0, 1, 0);
         // glTexCoord2f(x, y);
-        glVertex3f(nextX, nextY, wall);
-        glVertex3f(x, y, wall);
+        glVertex3f(nextX, nextY, z);
+        glVertex3f(x, y, z);
         glVertex3f(x, y, 0);
         glVertex3f(nextX, nextY, 0);
       glEnd();
