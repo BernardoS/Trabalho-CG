@@ -63,32 +63,96 @@ void Rectangle::draw() {
       glNormal3f(0, 1, 0);
 
       glTexCoord3f(0, 0, 0);
-      glVertex3f(-width/2.0, -height/2.0, height);
+      glVertex3f(-width/2.0, -height/2.0, 1.1 * height);
 
       glTexCoord3f(1, 0, 0);
-      glVertex3f(width/2.0, -height/2.0, height);
+      glVertex3f(width/2.0, -height/2.0, 1.1 * height);
 
       glTexCoord3f(1, 1, 0);
-      glVertex3f(width/2.0, height/2.0, height);
+      glVertex3f(width/2.0, height/2.0, 1.1 * height);
 
       glTexCoord3f(0, 1, 0);
-      glVertex3f(-width/2.0, height/2.0, height);
+      glVertex3f(-width/2.0, height/2.0, 1.1 * height);
     glEnd();
 
     glBegin(GL_QUADS); // parte de baixo
       glNormal3f(0, -1, 0);
 
       glTexCoord3f(0, 0, 0);
-      glVertex3f(-width/2.0, -height/2.0, height);
+      glVertex3f(-width/2.0, -height/2.0, 0.1 * height);
 
       glTexCoord3f(1, 0, 0);
-      glVertex3f(width/2.0, -height/2.0, height);
+      glVertex3f(width/2.0, -height/2.0, 0.1 * height);
 
       glTexCoord3f(1, 1, 0);
-      glVertex3f(width/2.0, height/2.0, height);
+      glVertex3f(width/2.0, height/2.0, 0.1 * height);
 
       glTexCoord3f(0, 1, 0);
-      glVertex3f(-width/2.0, height/2.0, height);
+      glVertex3f(-width/2.0, height/2.0, 0.1 * height);
+    glEnd();
+
+    glBegin(GL_QUADS); // parte da frente
+      glNormal3f(1, 0, 0);
+
+      glTexCoord3f(0, 0, 0);
+      glVertex3f(width/2.0, height/2.0, 0.1 * height);
+
+      glTexCoord3f(1, 0, 0);
+      glVertex3f(-width/2.0, height/2.0, 0.1 * height);
+
+      glTexCoord3f(1, 1, 0);
+      glVertex3f(-width/2.0, height/2.0, 1.1 * height);
+
+      glTexCoord3f(0, 1, 0);
+      glVertex3f(width/2.0, height/2.0, 1.1 * height);
+    glEnd();
+
+    glBegin(GL_QUADS); // parte de tras
+      glNormal3f(-1, 0, 0);
+
+      glTexCoord3f(0, 0, 0);
+      glVertex3f(-width/2.0, -height/2.0, 0.1 * height);
+
+      glTexCoord3f(1, 0, 0);
+      glVertex3f(-width/2.0, -height/2.0, 1.1 * height);
+
+      glTexCoord3f(1, 1, 0);
+      glVertex3f(width/2.0, -height/2.0, 1.1 * height);
+
+      glTexCoord3f(0, 1, 0);
+      glVertex3f(width/2.0, -height/2.0, 0.1 * height);
+    glEnd();
+
+    glBegin(GL_QUADS); // porta do passageiro
+      glNormal3f(0, 0, 1);
+
+      glTexCoord3f(0, 0, 0);
+      glVertex3f(width/2.0, -height/2.0, 0.1 * height);
+
+      glTexCoord3f(1, 0, 0);
+      glVertex3f(width/2.0, -height/2.0, 1.1 * height);
+
+      glTexCoord3f(1, 1, 0);
+      glVertex3f(width/2.0, height/2.0, 1.1 * height);
+
+      glTexCoord3f(0, 1, 0);
+      glVertex3f(width/2.0, height/2.0, 0.1 * height);
+    glEnd();
+
+    glBegin(GL_QUADS); // porta do motorista
+      glNormal3f(0, 0, -1);
+
+      glTexCoord3f(0, 0, 0);
+      glVertex3f(-width/2.0, height/2.0, 0.1 * height);
+
+      glTexCoord3f(1, 0, 0);
+      glVertex3f(-width/2.0, height/2.0, 1.1 * height);
+
+      glTexCoord3f(1, 1, 0);
+      glVertex3f(-width/2.0, -height/2.0, 1.1 * height);
+
+      glTexCoord3f(0, 1, 0);
+      glVertex3f(-width/2.0, -height/2.0, 0.1 * height);
     glEnd();
 
   glPopMatrix();

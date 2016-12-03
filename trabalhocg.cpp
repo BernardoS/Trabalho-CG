@@ -210,36 +210,14 @@ double camXZAngle = 0;
 int camAngle = 0;
 double camX = 0;
 double camY = 0;
-bool toggleCam = false;
+int toggleCam = 0;
 
 void keyUpFunc(unsigned char c, int i1, int i2) {
   keyPressed[int(c)] = false;
 	if (c == 'n') nightMode = !nightMode;
-	if (c == 't') toggleCam = !toggleCam;
-	if (c == '+') {
-		camDist += 0.01;
-		printf("camDist = %.2f\n", camDist);
-	}
-	if (c == '-') {
-		camDist -= 0.01;
-		printf("camDist = %.2f\n", camDist);
-	}
-	if (c == 'j') {
-		camX += 0.01;
-		printf("camX = %.2f\n", camX);
-	}
-	if (c == 'k') {
-		camX -= 0.01;
-		printf("camX = %.2f\n", camX);
-	}
-	if (c == 'l') {
-		camY += 0.01;
-		printf("camY = %.2f\n", camY);
-	}
-	if (c == 'm') {
-		camY -= 0.01;
-		printf("camY = %.2f\n", camY);
-	}
+	if (c == '1') toggleCam = 1;
+	if (c == '2') toggleCam = 2;
+	if (c == '3') toggleCam = 3;
 }
 void keyPressFunc(unsigned char c, int i1, int i2) {
   keyPressed[int(c)] = true;
@@ -273,16 +251,22 @@ void displayFunc(){
 
 	makeLight();
 
-	if(toggleCam) {
+	Point player_pos = Jogador->position();
+	if(toggleCam == 1) { // cockpit cam
 		// luiz
 		// glTranslatef(camX, camY, camDist);
 		// glRotatef(camXZAngle, 0.5, 0, 0);
 		// glRotatef(camXYAngle, 0, 0.5, 0);
-		Point player_pos = Jogador->position();
 		glTranslatef(0.5, 0.5, 2);
 		gluLookAt( -1,0.5,2, 0.5,0.5,0, 0,0,1 ); // de 3 em 3, camera position, camera looking at, up vector
 		// gluPerspective(camAngle, 1, camNear, camFar); // fov, aspect ratio, near, far
-	}
+	} else if(toggleCam == 2) { // cannon cam
+
+	} else if(toggleCam == 3) { // third person cam
+		glTranslatef( 0.5, 0.5, -1 );
+		gluLookAt( player_pos.x,player_pos.y - 0.1,0.1, player_pos.x,player_pos.y,0, 0,0,1 );
+	} else { /* default 2d camera */ }
+
 	Point* center = Arena[0].position();
 	printTime(0);
 	glPushMatrix();
