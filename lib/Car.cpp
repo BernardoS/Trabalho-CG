@@ -209,10 +209,12 @@ double Car::angulation(){
 }
 void Car::light() {
   glPushMatrix();
-    GLfloat position[] = {0, 0, 0.0, 1.0};
+    GLfloat position[] = {0, 0, 0, 1.0};
     GLfloat difuse[] = {1.0, 1.0, 0, 1};
     GLfloat specular[] = {1.0, 1.0, 0, 1};
-    GLfloat direction[] = {0.0, 1.0, 0.0};
+    GLfloat direction[] = {0.0, 1.0, 0};
+    GLfloat ambientLight0[] = {1, 1, 1, 1};
+  	// glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLight0);
     glLightfv(GL_LIGHT1, GL_POSITION, position);
     glLightfv(GL_LIGHT1, GL_DIFFUSE, difuse);
     glLightfv(GL_LIGHT1, GL_SPECULAR, specular);
@@ -225,7 +227,7 @@ void Car::light() {
 int teste = 0;
 void Car::draw(bool light) {
   glPushMatrix();
-    // Circle::draw();
+    Circle::draw();
     glTranslatef(position()->x, position()->y,0);
     glRotatef(angle, 0, 0, 1);
     if (light) this->light();

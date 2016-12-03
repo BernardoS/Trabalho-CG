@@ -98,12 +98,11 @@ void makeArena(const char* fill, double r, double x, double y){
 		window.height = r*2;
 
 		GLfloat color[3] = {0,0,1};
-
 		GLfloat materialEmission[] = {0, 0, 0, 1};
 		GLfloat materialAmbient[] = {0.5, 0.5, 0.5, 1};
 		GLfloat materialDifuse[] = {0.5, 0.5, 0.5, 1};
-		GLfloat materialSpecular[] = {0, 0, 0, 1};
-		GLfloat materialShininess[] = {0.0};
+		GLfloat materialSpecular[] = {0.5, 0.5, 0.5, 1};
+		GLfloat materialShininess[] = {100.0};
 
 		Arena[0] = *(new Circle(relativeX(r),color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess));
 		Arena[0].position(relativeX(x), relativeY(y));
@@ -113,7 +112,7 @@ void makeArena(const char* fill, double r, double x, double y){
 		GLfloat materialEmission[] = {0, 0, 0, 1};
 		GLfloat materialAmbient[] = {0, 0, 0, 1};
 		GLfloat materialDifuse[] = {0, 0, 0, 1};
-		GLfloat materialSpecular[] = {0, 0, 0, 0};
+		GLfloat materialSpecular[] = {0, 0, 0, 1};
 		GLfloat materialShininess[] = {0.0};
 
 		Arena[1] = *(new Circle(relativeX(r), color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess));
