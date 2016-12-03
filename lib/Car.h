@@ -40,6 +40,7 @@ public:
 	void position(Point* newPos);
 	Point* position();
   void texture(GLuint tex);
+  double height();
 };
 
 #endif // Car_H

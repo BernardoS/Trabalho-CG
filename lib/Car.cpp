@@ -10,6 +10,10 @@ void Car::makeBody(GLfloat color[3]) {
   double height = (radius*sqrt(2));
   body = new Rectangle(height/3, height, color, Circle::texture(), emission(), ambient(), difuse(), specular(), shininess());
 }
+
+double Car::height(){
+  return body->height;
+}
 void Car::makeCannon() {
   GLfloat color[3] = {27/256.0,94/256.0,32/256.0};
   GLfloat emission[] = {0, 0, 0, 1};

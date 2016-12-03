@@ -145,6 +145,8 @@ void makePlayer(double r, double x, double y){
 
 	Jogador = new Car(new Circle(relativeX(r), color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess));
 	Jogador->position(relativeX(x), relativeY(y));
+	Arena[0].depth(Jogador->height()*4);
+	Arena[1].depth(Jogador->height()*4);
 }
 
 void readSvg(XMLDocument &doc) {
