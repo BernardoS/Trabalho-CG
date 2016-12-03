@@ -9,10 +9,14 @@ void Car::makeBody(GLfloat color[3]) {
   angle = 0;
   double height = (radius*sqrt(2));
   body = new Rectangle(height/3, height, color, Circle::texture(), emission(), ambient(), difuse(), specular(), shininess());
+  body->depth(0.02);
 }
 
-double Car::height(){
-  return body->height;
+double Car::depth(){
+  return body->depth();
+}
+void Car::depth(double z){
+  body->depth(z);
 }
 void Car::makeCannon() {
   GLfloat color[3] = {27/256.0,94/256.0,32/256.0};
@@ -23,6 +27,7 @@ void Car::makeCannon() {
 	GLfloat shininess[] = {100.0};
   double width = body->width/2.0;
   cannon = new Rectangle(width/2.0, width*2, color, 0, emission, ambient, difuse, specular, shininess);
+  cannon->depth(width/2);
 }
 
 void Car::makeWheels() {
@@ -36,6 +41,7 @@ void Car::makeWheels() {
 
   for (size_t i = 0; i < 4; i++) {
     wheels[i] = *(new Rectangle(body->width/2.0, body->height/3, colorWheel, 0, emissionWheel, ambientWheel, difuseWheel, specularWheel, shininessWheel));
+    wheels[i].depth(body->width/2.0);
     //Cracks
     GLfloat colorCrack[3] = {158/256.0, 158/256.0, 158/256.0};
     for (size_t j = 0; j < 4; j++) {
@@ -53,6 +59,7 @@ void Car::makeAxis() {
   double width = body->width/2.0;
   for (size_t i = 0; i < 4; i++) {
     axis[i] = *(new Rectangle(width, width/2.0,color, 0, emission, ambient, difuse, specular, shininess));
+    axis[i].depth(width/2.0);
   }
 }
 Car::Car () : Circle(){
@@ -181,6 +188,7 @@ Circle* Car::shoot() {
   GLfloat color[3] = {0,0,0};
 
   Circle* shot = new Circle(0.005, color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess);
+  shot->sphere = true;
   shot->position(new Point(position()));
   double radians = cannon->angle* 0.0174533;
   double initX = sin(-radians)*(cannon->height/2.0 + 0.005/2.0) + sin(-radians)*cannon->width;
@@ -199,12 +207,28 @@ void Car::angulation(double angle) {
 double Car::angulation(){
   return angle;
 }
+void Car::light() {
+  glPushMatrix();
+    GLfloat position[] = {0, 0, 0.0, 1.0};
+    GLfloat difuse[] = {1.0, 1.0, 0, 1};
+    GLfloat specular[] = {1.0, 1.0, 0, 1};
+    GLfloat direction[] = {0.0, 1.0, 0.0};
+    glLightfv(GL_LIGHT1, GL_POSITION, position);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, difuse);
+    glLightfv(GL_LIGHT1, GL_SPECULAR, specular);
+    glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 2);
+    glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 20);
+    glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, direction);
+    glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 2);
+  glPopMatrix();
+}
 int teste = 0;
-void Car::draw() {
+void Car::draw(bool light) {
   glPushMatrix();
     // Circle::draw();
     glTranslatef(position()->x, position()->y,0);
     glRotatef(angle, 0, 0, 1);
+    if (light) this->light();
     cannon->draw();
     body->draw();
     for (size_t i = 0; i < 4; i++)

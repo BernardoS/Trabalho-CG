@@ -14,29 +14,35 @@ double Circle::depth(){
 Circle::Circle () : Polygon(){
   this->radius = 1;
   angle = 0;
+  sphere = false;
 }
 
 Circle::Circle (double radius, GLfloat color[3]) : Polygon(new Point(), color){
   this->radius = radius;
   angle = 0;
+  sphere = false;
 }
 
 Circle::Circle (double radius, GLfloat color[3], GLuint tex) : Polygon(new Point(), color, tex){
   this->radius = radius;
   angle = 0;
+  sphere = false;
 }
 
 Circle::Circle (double radius, GLfloat color[3], GLuint tex, GLfloat* emission, GLfloat* ambient, GLfloat* difuse, GLfloat* specular, GLfloat* shininess) : Polygon(new Point(), color, tex, emission, ambient, difuse, specular, shininess){
   this->radius = radius;
   angle = 0;
+  sphere = false;
 }
 Circle::Circle (double radius) : Polygon(new Point()){
   this->radius = radius;
   angle = 0;
+  sphere = false;
 }
 Circle::Circle (Circle* circle) : Polygon(circle->position(), circle->color, circle->texture(), circle->emission(), circle->ambient(), circle->difuse(), circle->specular(), circle->shininess()){
   radius = circle->radius;
   angle = 0;
+  sphere = false;
 }
 void Circle::draw() {
   GLfloat* materialEmission = emission();
@@ -53,52 +59,58 @@ void Circle::draw() {
     glBindTexture (GL_TEXTURE_2D, texture());
     glTranslatef(position()->x,position()->y,0);
     glColor3f(color[0],color[1],color[2]);
-    const float n = 10000;
+    if (sphere) {
+      gluSphere(gluNewQuadric(), radius, 100, 100);
+    } else {
+      const float n = 10000;
 
-    // Tampa de baixo
-    glBegin(GL_TRIANGLE_FAN);
-      glTexCoord2f(0, 0);
-      glVertex3f(0, 0, 0);
-      for(float i = 0; i < n; i++){
-        float angle = 2.0 * 3.1415926 * i / n;
-        float x = radius * cos(angle);
-        float y = radius * sin(angle);
+      // Tampa de baixo
+      glBegin(GL_TRIANGLE_FAN);
         glNormal3f(0, 1, 0);
-        glTexCoord2f(x, y);
-        glVertex3f(x, y,0);
-      }
-    glEnd();
-
-    // Tampa de cima
-    glBegin(GL_TRIANGLE_FAN);
-      glTexCoord2f(0, 0);
-      glVertex3f(0, 0, z);
-      for(float i = 0; i < n; i++){
-        float angle = 2.0 * 3.1415926 * i / n;
-        float x = radius * cos(angle);
-        float y = radius * sin(angle);
-        glNormal3f(0, -1, 0);
-        glTexCoord2f(x, y);
-        glVertex3f(x, y, z);
-      }
-    glEnd();
-
-    // Parede
-    for(float i = 0; i < n/2; i++){
-      float angle = 2.0 * 3.1415926 * i / (n/2);
-      float nextAngle = 2.0 * 3.1415926 * (i+1) / (n/2);
-      glBegin(GL_QUADS);
-        float x = radius * cos(angle);
-        float nextX = radius * cos(nextAngle);
-        float y = radius * sin(angle);
-        float nextY = radius * sin(nextAngle);
-        // glNormal3f(0, 1, 0);
-        // glTexCoord2f(x, y);
-        glVertex3f(nextX, nextY, z);
-        glVertex3f(x, y, z);
-        glVertex3f(x, y, 0);
-        glVertex3f(nextX, nextY, 0);
+        glTexCoord2f(0, 0);
+        glVertex3f(0, 0, 0);
+        for(float i = 0; i < n; i++){
+          float angle = 2.0 * 3.1415926 * i / n;
+          float x = radius * cos(angle);
+          float y = radius * sin(angle);
+          glNormal3f(0, 1, 0);
+          glTexCoord2f(x, y);
+          glVertex3f(x, y,0);
+        }
       glEnd();
+
+      // Tampa de cima
+      glBegin(GL_TRIANGLE_FAN);
+        glNormal3f(0, -1, 0);
+        glTexCoord2f(0, 0);
+        glVertex3f(0, 0, z);
+        for(float i = 0; i < n; i++){
+          float angle = 2.0 * 3.1415926 * i / n;
+          float x = radius * cos(angle);
+          float y = radius * sin(angle);
+          glNormal3f(0, -1, 0);
+          glTexCoord2f(x, y);
+          glVertex3f(x, y, z);
+        }
+      glEnd();
+
+      // Parede
+      for(float i = 0; i < n/2; i++){
+        float angle = 2.0 * 3.1415926 * i / (n/2);
+        float nextAngle = 2.0 * 3.1415926 * (i+1) / (n/2);
+        glBegin(GL_QUADS);
+          float x = radius * cos(angle);
+          float nextX = radius * cos(nextAngle);
+          float y = radius * sin(angle);
+          float nextY = radius * sin(nextAngle);
+          // glNormal3f(0, 1, 0);
+          // glTexCoord2f(x, y);
+          glVertex3f(nextX, nextY, z);
+          glVertex3f(x, y, z);
+          glVertex3f(x, y, 0);
+          glVertex3f(nextX, nextY, 0);
+        glEnd();
+      }
     }
   glPopMatrix();
 }

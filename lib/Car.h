@@ -31,7 +31,7 @@ public:
   double angulation();
   Circle* shoot();
   void angulation(double angle);
-  void draw();
+  void draw(bool light);
   void moveWheels(double angle);
   void moveWheels();
   void moveCannon(double angle);
@@ -40,7 +40,9 @@ public:
 	void position(Point* newPos);
 	Point* position();
   void texture(GLuint tex);
-  double height();
+  double depth();
+  void depth(double z);
+  void light();
 };
 
 #endif // Car_H

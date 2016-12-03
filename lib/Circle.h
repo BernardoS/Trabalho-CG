@@ -10,6 +10,7 @@ public:
 	double angle;
 	double radius;
 	double z;
+	bool sphere;
 	Circle();
 	Circle(double radius);
 	Circle (double radius, GLfloat color[3]);

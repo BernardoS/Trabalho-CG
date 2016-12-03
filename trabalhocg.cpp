@@ -145,8 +145,8 @@ void makePlayer(double r, double x, double y){
 
 	Jogador = new Car(new Circle(relativeX(r), color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess));
 	Jogador->position(relativeX(x), relativeY(y));
-	Arena[0].depth(Jogador->height()*4);
-	Arena[1].depth(Jogador->height()*4);
+	// Arena[0].depth(Jogador->height()*4);
+	// Arena[1].depth(Jogador->height()*4);
 }
 
 void readSvg(XMLDocument &doc) {
@@ -182,6 +182,7 @@ void readSvg(XMLDocument &doc) {
 			GLfloat materialShininess[] = {0.0};
 			LargadaChegada = new Rectangle(relativeX(width),relativeX(height),color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess);
 			LargadaChegada->position(relativeX(x) + LargadaChegada->width/2.0, relativeY(y) - LargadaChegada->height/2.0);
+			LargadaChegada->depth(0.0001);
 		}
 		current = current->NextSiblingElement();
 	}
@@ -226,21 +227,8 @@ void keyPressFunc(unsigned char c, int i1, int i2) {
 }
 
 void makeLight() {
-	GLfloat position[] = {0.5, 0.5, 1.0, 1.0};
-	GLfloat ambient[] = {1.0, 1.0, 0, 1};
 	GLfloat ambientLight0[] = {1, 1, 1, 1};
-	GLfloat difuse[] = {1.0, 1.0, 0, 1};
-	GLfloat specular[] = {1.0, 1.0, 0, 1};
-	// GLfloat direction[] = {0.0, 0.0, -1.0};
-	glLightfv(GL_LIGHT1, GL_POSITION, position);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight0);
-	glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, difuse);
-	glLightfv(GL_LIGHT1, GL_SPECULAR, specular);
-	// glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 2);
-	// glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 20);
-	// glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, direction);
-	// glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 2);
 }
 
 void displayFunc(){
@@ -280,9 +268,9 @@ void displayFunc(){
 		// Arena[1].drawWall(); // luiz
 		LargadaChegada->draw();
 		for (size_t i = 0; i < Inimigos.size(); i++) {
-			Inimigos[i]->draw();
+			Inimigos[i]->draw(false);
 		}
-		Jogador->draw();
+		Jogador->draw(nightMode);
 	glPopMatrix();
 	for (size_t i = 0; i < shots.size(); i++) {
 		glPushMatrix();
@@ -504,11 +492,11 @@ void updateEnemies(double timeDiff) {
 void idleFunc() {
 	if (nightMode) {
 		glDisable(GL_LIGHT0);
-		// glEnable(GL_LIGHT1);
+		glEnable(GL_LIGHT1);
 	}
 	else {
 		glEnable(GL_LIGHT0);
-		// glDisable(GL_LIGHT1);
+		glDisable(GL_LIGHT1);
 	}
 	static GLdouble previousTime = 0;
 	GLdouble currentTime;
@@ -537,15 +525,15 @@ void init() {
   glLoadIdentity();
 	glOrtho(0, 1, 0, 1, -1, 1);
 
-	floorTexture = loadTexture("textures/floor.bmp");
-	// startTexture = loadTexture("textures/start.bmp");
-	carTexture = loadTexture("textures/car.bmp");
-	Arena[0].texture(floorTexture);
-	// LargadaChegada->texture(startTexture);
-	Jogador->texture(carTexture);
-	for (size_t i = 0; i < Inimigos.size(); i++) {
-		Inimigos.at(i)->texture(carTexture);
-	}
+	// floorTexture = loadTexture("textures/floor.bmp");
+	// // startTexture = loadTexture("textures/start.bmp");
+	// carTexture = loadTexture("textures/car.bmp");
+	// Arena[0].texture(floorTexture);
+	// // LargadaChegada->texture(startTexture);
+	// Jogador->texture(carTexture);
+	// for (size_t i = 0; i < Inimigos.size(); i++) {
+	// 	Inimigos.at(i)->texture(carTexture);
+	// }
 }
 
 int main(int argc, char **argv) {
