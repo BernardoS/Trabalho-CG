@@ -465,7 +465,7 @@ void moveEnemies(double timeDiff) {
 	double speed = relativeX(enemySpeed*timeDiff);
 	for (size_t i = 0; i < Inimigos.size(); i++) {
 		Point* oldPosition = new Point(Inimigos[i]->position());
-		Inimigos[i]->move(speed);
+		// Inimigos[i]->move(speed);
 		if (!canCircleMove(Inimigos[i])) {
 			decayingAngle.insert(decayingAngle.begin() + i, r*45.0);
 			Inimigos[i]->moveWheels((Arena[0].in(Inimigos[i])) ? -r : r);
