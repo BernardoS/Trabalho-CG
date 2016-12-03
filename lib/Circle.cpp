@@ -64,7 +64,6 @@ void Circle::draw() {
     } else {
       const float n = 1000;
 
-      glShadeModel(GL_FLAT);
       // Tampa de baixo
       glBegin(GL_TRIANGLE_FAN);
         glNormal3f(0, 0, 0);
@@ -76,43 +75,44 @@ void Circle::draw() {
           float y = radius * sin(angle);
           double len = sqrt(x*x + y*y);
           glNormal3f(-x/len, -y/len, 0);
-          glTexCoord2f(x, y);
+          // glTexCoord2f(x, y);
           glVertex3f(x, y,0);
         }
       glEnd();
 
       // Tampa de cima
-      // glBegin(GL_TRIANGLE_FAN);
-      //   glNormal3f(0, -1, 0);
-      //   glTexCoord2f(0, 0);
-      //   glVertex3f(0, 0, z);
-      //   for(float i = 0; i < n; i++){
-      //     float angle = 2.0 * 3.1415926 * i / n;
-      //     float x = radius * cos(angle);
-      //     float y = radius * sin(angle);
-      //     glNormal3f(0, -1, 0);
-      //     glTexCoord2f(x, y);
-      //     glVertex3f(x, y, z);
-      //   }
-      // glEnd();
+      glBegin(GL_TRIANGLE_FAN);
+        glNormal3f(0, 0, 0);
+        glTexCoord2f(0, 0);
+        glVertex3f(0, 0, 0);
+        for(float i = 0; i <= n; i++){
+          float angle = 2.0 * 3.1415926 * i / n;
+          float x = radius * cos(angle);
+          float y = radius * sin(angle);
+          double len = sqrt(x*x + y*y);
+          glNormal3f(-x/len, -y/len, 0);
+          // glTexCoord2f(x, y);
+          glVertex3f(x, y,z);
+        }
+      glEnd();
 
       // Parede
-      // for(float i = 0; i < n/2; i++){
-      //   float angle = 2.0 * 3.1415926 * i / (n/2);
-      //   float nextAngle = 2.0 * 3.1415926 * (i+1) / (n/2);
-      //   glBegin(GL_QUADS);
-      //     float x = radius * cos(angle);
-      //     float nextX = radius * cos(nextAngle);
-      //     float y = radius * sin(angle);
-      //     float nextY = radius * sin(nextAngle);
-      //     // glNormal3f(0, 1, 0);
-      //     // glTexCoord2f(x, y);
-      //     glVertex3f(nextX, nextY, z);
-      //     glVertex3f(x, y, z);
-      //     glVertex3f(x, y, 0);
-      //     glVertex3f(nextX, nextY, 0);
-      //   glEnd();
-      // }
+      for(float i = 0; i < n/2; i++){
+        float angle = 2.0 * 3.1415926 * i / (n/2);
+        float nextAngle = 2.0 * 3.1415926 * (i+1) / (n/2);
+        glBegin(GL_QUADS);
+          float x = radius * cos(angle);
+          float nextX = radius * cos(nextAngle);
+          float y = radius * sin(angle);
+          float nextY = radius * sin(nextAngle);
+          // glNormal3f(0, 1, 0);
+          // glTexCoord2f(x, y);
+          glVertex3f(nextX, nextY, z);
+          glVertex3f(x, y, z);
+          glVertex3f(x, y, 0);
+          glVertex3f(nextX, nextY, 0);
+        glEnd();
+      }
     }
   glPopMatrix();
 }

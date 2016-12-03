@@ -213,7 +213,7 @@ void Car::light() {
     GLfloat difuse[] = {1.0, 1.0, 0, 1};
     GLfloat specular[] = {1.0, 1.0, 0, 1};
     GLfloat direction[] = {0.0, 1.0, 0};
-    GLfloat ambientLight0[] = {1, 1, 1, 1};
+    // GLfloat ambientLight0[] = {1, 1, 1, 1};
   	// glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLight0);
     glLightfv(GL_LIGHT1, GL_POSITION, position);
     glLightfv(GL_LIGHT1, GL_DIFFUSE, difuse);
