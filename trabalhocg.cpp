@@ -100,8 +100,8 @@ void makeArena(const char* fill, double r, double x, double y){
 		GLfloat color[3] = {0,0,1};
 		GLfloat materialEmission[] = {0, 0, 0, 1};
 		GLfloat materialAmbient[] = {0.5, 0.5, 0.5, 1};
-		GLfloat materialDifuse[] = {0.5, 0.5, 0.5, 1};
-		GLfloat materialSpecular[] = {0.5, 0.5, 0.5, 1};
+		GLfloat materialDifuse[] = {0, 0, 0, 1};
+		GLfloat materialSpecular[] = {0, 0, 0, 1};
 		GLfloat materialShininess[] = {100.0};
 
 		Arena[0] = *(new Circle(relativeX(r),color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess));
@@ -504,11 +504,10 @@ void updateGame(double timeDiff) {
 
 void moveEnemies(double timeDiff) {
 	double r = ((double) rand() / (RAND_MAX));
-	// std::cout << r << std::endl;
 	double speed = relativeX(enemySpeed*timeDiff);
 	for (size_t i = 0; i < Inimigos.size(); i++) {
 		Point* oldPosition = new Point(Inimigos[i]->position());
-		// Inimigos[i]->move(speed);
+		Inimigos[i]->move(speed);
 		if (!canCircleMove(Inimigos[i])) {
 			decayingAngle.insert(decayingAngle.begin() + i, r*45.0);
 			Inimigos[i]->moveWheels((Arena[0].in(Inimigos[i])) ? -r : r);
@@ -568,15 +567,15 @@ void init() {
   glLoadIdentity();
 	glOrtho(0, 1, 0, 1, -1, 1);
 
-	// floorTexture = loadTexture("textures/floor.bmp");
-	// // startTexture = loadTexture("textures/start.bmp");
-	// carTexture = loadTexture("textures/car.bmp");
-	// Arena[0].texture(floorTexture);
-	// // LargadaChegada->texture(startTexture);
-	// Jogador->texture(carTexture);
-	// for (size_t i = 0; i < Inimigos.size(); i++) {
-	// 	Inimigos.at(i)->texture(carTexture);
-	// }
+	floorTexture = loadTexture("textures/floor.bmp");
+	// startTexture = loadTexture("textures/start.bmp");
+	carTexture = loadTexture("textures/car.bmp");
+	Arena[0].texture(floorTexture);
+	// LargadaChegada->texture(startTexture);
+	Jogador->texture(carTexture);
+	for (size_t i = 0; i < Inimigos.size(); i++) {
+		Inimigos.at(i)->texture(carTexture);
+	}
 }
 
 int main(int argc, char **argv) {
