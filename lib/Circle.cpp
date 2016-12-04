@@ -81,13 +81,8 @@ void Circle::draw() {
           glVertex3f(x, y,0);
         }
       glEnd();
-<<<<<<< HEAD
 
       // Tampa de cima
-=======
-      //
-      // // Tampa de cima
->>>>>>> 3e63f26364bfe3c0f98810ffa937964050e04390
       // glBegin(GL_TRIANGLE_FAN);
       //   glNormal3f(0, 0, 0);
       //   glTexCoord2f(0, 0);
@@ -102,13 +97,8 @@ void Circle::draw() {
       //     glVertex3f(x, y,z);
       //   }
       // glEnd();
-<<<<<<< HEAD
 
       // Parede
-=======
-      //
-      // // Parede
->>>>>>> 3e63f26364bfe3c0f98810ffa937964050e04390
       // for(float i = 0; i < n/2; i++){
       //   float angle = 2.0 * 3.1415926 * i / (n/2);
       //   float nextAngle = 2.0 * 3.1415926 * (i+1) / (n/2);

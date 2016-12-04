@@ -220,6 +220,7 @@ void keyUpFunc(unsigned char c, int i1, int i2) {
 	if (c == '1') toggleCam = 1;
 	if (c == '2') toggleCam = 2;
 	if (c == '3') toggleCam = 3;
+	if (c == '0') toggleCam = 0;
 }
 void keyPressFunc(unsigned char c, int i1, int i2) {
   keyPressed[int(c)] = true;
@@ -249,7 +250,7 @@ void displayFunc(){
 		// glRotatef(camXZAngle, 0.5, 0, 0);
 		// glRotatef(camXYAngle, 0, 0.5, 0);
 
-		// glTranslatef(playerx, playery, 0);
+		glTranslatef(0.5, 0.5, 0);
 		// camera position, camera looking at, up vector
 		gluLookAt(	playerx + (Jogador->radius / 4) * cos(Jogador->angulation() * M_PI / 180),
 								playery,
@@ -260,8 +261,13 @@ void displayFunc(){
 								0, 0, 1  );
 
 		// gluPerspective(camAngle, 1, camNear, camFar); // fov, aspect ratio, near, far
-	} else if(toggleCam == 2) { // cannon cam
-	} else if(toggleCam == 3) { // third person cam
+	} else if(toggleCam == 2) {
+		glTranslatef(0.5, 0.5, 2);
+		gluLookAt(-1,0.5,2, 0.5,0.5,0, 0,0,1);
+	} else if(toggleCam == 3) {
+		glTranslatef(camX, camY, camDist);
+		glRotatef(camXZAngle, 0.5, 0.5, 0);
+		glRotatef(camXYAngle, 0.5, 0.5, 0);
 	} else { /* default 2d camera */ }
 
 	Point* center = Arena[0].position();
