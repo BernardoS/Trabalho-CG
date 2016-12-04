@@ -240,20 +240,28 @@ void displayFunc(){
 
 	makeLight();
 
-	Point player_pos = Jogador->position();
+	double playerx = Jogador->position()->x;
+	double playery = Jogador->position()->y;
+	double playerz = Jogador->depth();
 	if(toggleCam == 1) { // cockpit cam
 		// luiz
 		// glTranslatef(camX, camY, camDist);
 		// glRotatef(camXZAngle, 0.5, 0, 0);
 		// glRotatef(camXYAngle, 0, 0.5, 0);
-		glTranslatef(0.5, 0.5, 2);
-		gluLookAt( -1,0.5,2, 0.5,0.5,0, 0,0,1 ); // de 3 em 3, camera position, camera looking at, up vector
+
+		// glTranslatef(playerx, playery, 0);
+		// camera position, camera looking at, up vector
+		gluLookAt(	playerx + (Jogador->radius / 4) * cos(Jogador->angulation() * M_PI / 180),
+								playery,
+								playerz + (Jogador->radius / 6) * -sin(Jogador->angulation() * M_PI / 180),
+								playerx + Jogador->radius * cos(Jogador->angulation() * M_PI / 180),
+								playery,
+								playerz + Jogador->radius * -sin(Jogador->angulation() * M_PI / 180),
+								0, 0, 1  );
+
 		// gluPerspective(camAngle, 1, camNear, camFar); // fov, aspect ratio, near, far
 	} else if(toggleCam == 2) { // cannon cam
-
 	} else if(toggleCam == 3) { // third person cam
-		glTranslatef( 0.5, 0.5, -1 );
-		gluLookAt( player_pos.x,player_pos.y - 0.1,0.1, player_pos.x,player_pos.y,0, 0,0,1 );
 	} else { /* default 2d camera */ }
 
 	Point* center = Arena[0].position();
