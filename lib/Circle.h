@@ -8,9 +8,12 @@
 class Circle : public Polygon{
 public:
 	double angle;
+	double angleZ;
 	double radius;
 	double z;
 	bool sphere;
+	bool flip;
+	double acrescimo;
 	Circle();
 	Circle(double radius);
 	Circle (double radius, GLfloat color[3]);

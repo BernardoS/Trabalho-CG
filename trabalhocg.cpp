@@ -144,8 +144,8 @@ void makePlayer(double r, double x, double y){
 
 	Jogador = new Car(new Circle(relativeX(r), color, 0, materialEmission, materialAmbient, materialDifuse, materialSpecular, materialShininess));
 	Jogador->position(relativeX(x), relativeY(y));
-	Arena[0].depth(Jogador->depth()*4);
-	Arena[1].depth(Jogador->depth()*4);
+	// Arena[0].depth(Jogador->depth()*4);
+	// Arena[1].depth(Jogador->depth()*4);
 }
 
 void readSvg(XMLDocument &doc) {
@@ -188,22 +188,59 @@ void readSvg(XMLDocument &doc) {
 	decayingAngle = std::vector<double>(Inimigos.size(), 0.0);
 }
 
+void printGameStatus() {
+	char str[200];
+	if (shotsTaken > 0) sprintf(str, "You lose, %d shot(s) taken", shotsTaken);
+	else sprintf(str, "You win!");
+	glMatrixMode (GL_PROJECTION);
+	//Push to recover original PROJECTION MATRIX
+	glPushMatrix();
+			glLoadIdentity ();
+			glOrtho (0, 1, 0, 1, -1, 1);
+			glPushAttrib(GL_ENABLE_BIT);
+	        glDisable(GL_LIGHTING);
+	        glDisable(GL_TEXTURE_2D);
+	        //Draw text in the x, y, z position
+	        glColor3f(1,1,1);
+	        glRasterPos3f(0.5, 0.5, 0);
+	        const char* tmpStr;
+	        tmpStr = str;
+	        while( *tmpStr ){
+	            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *tmpStr);
+	            tmpStr++;
+	        }
+	    glPopAttrib();
+	glPopMatrix();
+	glMatrixMode (GL_MODELVIEW);
+}
+
 void printTime(double timeDiff){
 	static double totalTime = 0;
 	totalTime += timeDiff/1000.0;
   //Create a string to be printed
 	char str[200];
 	sprintf(str, "Tempo: %.3f", totalTime);
+	//Draw text considering a 2D space (disable all 3d features)
+	glMatrixMode (GL_PROJECTION);
+	//Push to recover original PROJECTION MATRIX
 	glPushMatrix();
-  glRasterPos3f(0, 0, 0);
-	glColor3ub(0,0,0);
-  //Print each of the other Char at time
-	const char* tmpStr = str;
-  while(*tmpStr){
-      glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *tmpStr);
-      tmpStr++;
-  }
+			glLoadIdentity ();
+			glOrtho (0, 1, 0, 1, -1, 1);
+			glPushAttrib(GL_ENABLE_BIT);
+	        glDisable(GL_LIGHTING);
+	        glDisable(GL_TEXTURE_2D);
+	        //Draw text in the x, y, z position
+	        glColor3f(1,1,1);
+	        glRasterPos3f(0, 0, 0);
+	        const char* tmpStr;
+	        tmpStr = str;
+	        while( *tmpStr ){
+	            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *tmpStr);
+	            tmpStr++;
+	        }
+	    glPopAttrib();
 	glPopMatrix();
+	glMatrixMode (GL_MODELVIEW);
 }
 
 double camDist = 0;
@@ -295,22 +332,9 @@ void displayFunc(){
 			enemiesShots[i]->draw();
 		glPopMatrix();
 	}
-	shotsTaken = 1;
 	glPopMatrix();
 	if (gameOver) {
-		char str[200];
-		if (shotsTaken > 0) sprintf(str, "You lose, %d shot(s) taken", shotsTaken);
-		else sprintf(str, "You win!");
-		glPushMatrix();
-		glColor3ub(0,0,0);
-		glRasterPos2f(relativeX(window.width)/2.0 - 4*relativeX(strlen(str)), relativeX(window.height)/2.0);
-		//Print each of the other Char at time
-		char* tmpStr = str;
-		while(*tmpStr){
-	      glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *tmpStr);
-	      tmpStr++;
-	  }
-		glPopMatrix();
+		printGameStatus();
 	}
 	glutSwapBuffers();
 }
@@ -362,14 +386,20 @@ void updatePlayer(double timeDiff) {
 }
 
 double mouseX = 0;
+double mouseY = 0;
 int lastX = 0;
 int lastY = 0;
 int buttonDown = 0;
 void motionFunc(int x, int y) {
 	double relative = relativeX(x);
-	if (relative > mouseX) Jogador->moveCannon(-1);
-	else Jogador->moveCannon(1);
+	if (relative > mouseX) Jogador->moveCannon(-1, 0);
+	else Jogador->moveCannon(1, 0);
 	mouseX = relative;
+
+	relative = relativeY(y);
+	if (relative > mouseY) Jogador->moveCannon(0, 1);
+	else Jogador->moveCannon(0, -1);
+	mouseY = relative;
 }
 
 void mouseFunc(int button, int state, int x, int y) {
@@ -466,7 +496,7 @@ double angle() {
 
 void updateGame(double timeDiff) {
 	double position = angle();
-	if (position != 0) gameOn = true;
+	if (position > 0) gameOn = true;
 	if (!gameOver && gameOn) printTime(timeDiff);
 	if(position >= 360) gameOver = true;
 }
@@ -538,15 +568,15 @@ void init() {
   glLoadIdentity();
 	glOrtho(0, 1, 0, 1, -1, 1);
 
-	floorTexture = loadTexture("textures/floor.bmp");
-	// startTexture = loadTexture("textures/start.bmp");
-	carTexture = loadTexture("textures/car.bmp");
-	Arena[0].texture(floorTexture);
-	// LargadaChegada->texture(startTexture);
-	Jogador->texture(carTexture);
-	for (size_t i = 0; i < Inimigos.size(); i++) {
-		Inimigos.at(i)->texture(carTexture);
-	}
+	// floorTexture = loadTexture("textures/floor.bmp");
+	// // startTexture = loadTexture("textures/start.bmp");
+	// carTexture = loadTexture("textures/car.bmp");
+	// Arena[0].texture(floorTexture);
+	// // LargadaChegada->texture(startTexture);
+	// Jogador->texture(carTexture);
+	// for (size_t i = 0; i < Inimigos.size(); i++) {
+	// 	Inimigos.at(i)->texture(carTexture);
+	// }
 }
 
 int main(int argc, char **argv) {
