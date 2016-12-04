@@ -472,7 +472,7 @@ void moveEnemies(double timeDiff) {
 	double speed = relativeX(enemySpeed*timeDiff);
 	for (size_t i = 0; i < Inimigos.size(); i++) {
 		Point* oldPosition = new Point(Inimigos[i]->position());
-		Inimigos[i]->move(speed);
+		// Inimigos[i]->move(speed);
 		if (!canCircleMove(Inimigos[i])) {
 			decayingAngle.insert(decayingAngle.begin() + i, r*45.0);
 			Inimigos[i]->moveWheels((Arena[0].in(Inimigos[i])) ? -r : r);
@@ -532,15 +532,15 @@ void init() {
   glLoadIdentity();
 	glOrtho(0, 1, 0, 1, -1, 1);
 
-	// floorTexture = loadTexture("textures/floor.bmp");
-	// // startTexture = loadTexture("textures/start.bmp");
-	// carTexture = loadTexture("textures/car.bmp");
-	// Arena[0].texture(floorTexture);
-	// // LargadaChegada->texture(startTexture);
-	// Jogador->texture(carTexture);
-	// for (size_t i = 0; i < Inimigos.size(); i++) {
-	// 	Inimigos.at(i)->texture(carTexture);
-	// }
+	floorTexture = loadTexture("textures/floor.bmp");
+	// startTexture = loadTexture("textures/start.bmp");
+	carTexture = loadTexture("textures/car.bmp");
+	Arena[0].texture(floorTexture);
+	// LargadaChegada->texture(startTexture);
+	Jogador->texture(carTexture);
+	for (size_t i = 0; i < Inimigos.size(); i++) {
+		Inimigos.at(i)->texture(carTexture);
+	}
 }
 
 int main(int argc, char **argv) {
