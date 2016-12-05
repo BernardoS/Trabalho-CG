@@ -140,8 +140,8 @@ void Circle::draw() {
         float nextX = radius * cos(nextAngle);
         float y = radius * sin(angle);
         float nextY = radius * sin(nextAngle);
-        // glNormal3f(0, 1, 0);
-        // glTexCoord2f(x, y);
+        glNormal3f(0, 1, 0);
+        if (!flip) glTexCoord2f(x, y);
         glVertex3f(nextX, nextY, z/2);
         glVertex3f(x, y, z/2);
         glVertex3f(x, y, -z/2);

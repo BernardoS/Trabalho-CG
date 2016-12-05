@@ -9,7 +9,7 @@ void Car::makeBody(GLfloat color[3]) {
   angle = 0;
   double height = (radius*sqrt(2));
   body = new Rectangle(height/3, height, color, Circle::texture(), emission(), ambient(), difuse(), specular(), shininess());
-  body->depth(0.02);
+  body->depth(body->width/2);
 }
 
 double Car::depth(){
@@ -41,9 +41,8 @@ void Car::makeWheels() {
 
   for (size_t i = 0; i < 4; i++) {
     wheels[i] = *(new Circle(body->width/2.0, colorWheel, 0, emissionWheel, ambientWheel, difuseWheel, specularWheel, shininessWheel));
-    wheels[i].depth(body->width/2.0);
     wheels[i].flip = true;
-    wheels[i].depth(0.01);
+    wheels[i].depth(depth());
   }
 }
 void Car::makeAxis() {
@@ -96,19 +95,23 @@ void Car::moveWheels() {
 void Car::moveCannon(double speedX, double speedZ) {
   if (((int)angle % 360) > 90 || ((int) angle % 360) < -90){
     speedX = -speedX;
-    speedZ = -speedZ;
   }
-  speedX = cannon->angle + speedX;
-  if (speedX > 0) {
-    speedX = (speedX <= 45) ?  speedX : 45;
-  } else {
-    speedX = (speedX >= -45) ?  speedX : -45;
+  speedZ = -speedZ;
+  // std::cout << speedX << std::endl;
+  if(speedX != 0){
+    speedX = cannon->angle + speedX;
+    if (speedX > 0) {
+      speedX = (speedX <= 45) ?  speedX : 45;
+    } else {
+      speedX = (speedX >= -45) ?  speedX : -45;
+    }
+    cannon->angle = speedX;
   }
-  cannon->angle = speedX;
-
-  speedZ = cannon->angleZ + speedZ;
-  if (speedZ >= 0) {
-    cannon->angleZ = (speedZ <= 45) ?  speedZ : 45;
+  if (speedZ != 0) {
+    speedZ = cannon->angleZ + speedZ;
+    if (speedZ >= 0) {
+      cannon->angleZ = (speedZ <= 45) ?  speedZ : 45;
+    }
   }
 }
 void Car::move(double speed) {
@@ -210,12 +213,12 @@ void Car::light() {
 int teste = 0;
 void Car::draw(bool light) {
   glPushMatrix();
-    // Circle::draw();
+    Circle::draw();
     glTranslatef(position()->x, position()->y,wheels[0].radius);
     glRotatef(angle, 0, 0, 1);
     if (light) this->light();
     glPushMatrix();
-      glTranslatef(0, 0, body->height/2 - cannon->height);
+      glTranslatef(0, 0, depth()/2 - cannon->depth()/2);
       cannon->draw();
     glPopMatrix();
     body->draw();

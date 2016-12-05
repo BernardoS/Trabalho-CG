@@ -221,26 +221,26 @@ void printTime(double timeDiff){
 	char str[200];
 	sprintf(str, "Tempo: %.3f", totalTime);
 	//Draw text considering a 2D space (disable all 3d features)
-	glMatrixMode (GL_PROJECTION);
 	//Push to recover original PROJECTION MATRIX
+	glMatrixMode (GL_PROJECTION);
 	glPushMatrix();
-			glLoadIdentity ();
-			glOrtho (0, 1, 0, 1, -1, 1);
-			glPushAttrib(GL_ENABLE_BIT);
-	        glDisable(GL_LIGHTING);
-	        glDisable(GL_TEXTURE_2D);
-	        //Draw text in the x, y, z position
-	        glColor3f(1,1,1);
-	        glRasterPos3f(0, 0, 0);
-	        const char* tmpStr;
-	        tmpStr = str;
-	        while( *tmpStr ){
-	            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *tmpStr);
-	            tmpStr++;
-	        }
-	    glPopAttrib();
+		glLoadIdentity ();
+		glOrtho(0, 1, 0, 1, -1, 1);
+		glPushAttrib(GL_ENABLE_BIT);
+        glDisable(GL_LIGHTING);
+        glDisable(GL_TEXTURE_2D);
+        //Draw text in the x, y, z position
+        glColor3f(1,1,1);
+        glRasterPos3f(0, 0, 0);
+        const char* tmpStr;
+        tmpStr = str;
+        while( *tmpStr ){
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *tmpStr);
+            tmpStr++;
+        }
+    glPopAttrib();
+		glMatrixMode (GL_MODELVIEW);
 	glPopMatrix();
-	glMatrixMode (GL_MODELVIEW);
 }
 
 double camDist = 0;
@@ -278,9 +278,14 @@ void displayFunc(){
 
 	makeLight();
 
+	printTime(0);
+	if (gameOver) {
+		printGameStatus();
+	}
 	double playerx = Jogador->position()->x;
 	double playery = Jogador->position()->y;
 	double playerz = Jogador->depth();
+
 	if(toggleCam == 1) { // cockpit cam
 		// luiz
 		// glTranslatef(camX, camY, camDist);
@@ -299,43 +304,41 @@ void displayFunc(){
 
 		// gluPerspective(camAngle, 1, camNear, camFar); // fov, aspect ratio, near, far
 	} else if(toggleCam == 2) {
-		glTranslatef(0.5, 0.5, 2);
-		gluLookAt(-1,0.5,2, 0.5,0.5,0, 0,0,1);
+		glMatrixMode (GL_PROJECTION);
+	    glLoadIdentity ();
+	    gluPerspective (45, 1, 0.1, 2);
+    glMatrixMode (GL_MODELVIEW);
+
+		gluLookAt(playerx,playery,1, playerx, playery, 0,  0,1,0);
 	} else if(toggleCam == 3) {
 		glTranslatef(camX, camY, camDist);
 		glRotatef(camXZAngle, 0.5, 0.5, 0);
 		glRotatef(camXYAngle, 0.5, 0.5, 0);
 	} else { /* default 2d camera */ }
 
-	Point* center = Arena[0].position();
-	printTime(0);
 	glPushMatrix();
-	glTranslatef(relativeX(window.width)/2.0 - center->x, relativeX(window.height)/2.0 - center->y,0);
-	glPushMatrix();
-		Arena[0].draw();
-		// Arena[0].drawWall(); // luiz
-		Arena[1].draw();
-		// Arena[1].drawWall(); // luiz
-		LargadaChegada->draw();
-		for (size_t i = 0; i < Inimigos.size(); i++) {
-			Inimigos[i]->draw(false);
+		glPushMatrix();
+			Arena[0].draw();
+			// Arena[0].drawWall(); // luiz
+			Arena[1].draw();
+			// Arena[1].drawWall(); // luiz
+			LargadaChegada->draw();
+			for (size_t i = 0; i < Inimigos.size(); i++) {
+				Inimigos[i]->draw(false);
+			}
+			Jogador->draw(nightMode);
+		glPopMatrix();
+		for (size_t i = 0; i < shots.size(); i++) {
+			glPushMatrix();
+				shots[i]->draw();
+			glPopMatrix();
 		}
-		Jogador->draw(nightMode);
+		for (size_t i = 0; i < enemiesShots.size(); i++) {
+			glPushMatrix();
+				enemiesShots[i]->draw();
+			glPopMatrix();
+		}
 	glPopMatrix();
-	for (size_t i = 0; i < shots.size(); i++) {
-		glPushMatrix();
-			shots[i]->draw();
-		glPopMatrix();
-	}
-	for (size_t i = 0; i < enemiesShots.size(); i++) {
-		glPushMatrix();
-			enemiesShots[i]->draw();
-		glPopMatrix();
-	}
-	glPopMatrix();
-	if (gameOver) {
-		printGameStatus();
-	}
 	glutSwapBuffers();
 }
 
@@ -391,15 +394,11 @@ int lastX = 0;
 int lastY = 0;
 int buttonDown = 0;
 void motionFunc(int x, int y) {
-	double relative = relativeX(x);
-	if (relative > mouseX) Jogador->moveCannon(-1, 0);
-	else Jogador->moveCannon(1, 0);
-	mouseX = relative;
-
-	relative = relativeY(y);
-	if (relative > mouseY) Jogador->moveCannon(0, 1);
-	else Jogador->moveCannon(0, -1);
-	mouseY = relative;
+	double xMove = (relativeX(x) > mouseX) ? -1 : 1;
+	double yMove = (relativeY(y) > mouseY) ? -1 : 1;
+	Jogador->moveCannon(xMove, yMove);
+	mouseX = relativeX(x);
+	mouseY = relativeY(y);
 }
 
 void mouseFunc(int button, int state, int x, int y) {
@@ -500,7 +499,6 @@ void updateGame(double timeDiff) {
 	if (!gameOver && gameOn) printTime(timeDiff);
 	if(position >= 360) gameOver = true;
 }
-
 
 void moveEnemies(double timeDiff) {
 	double r = ((double) rand() / (RAND_MAX));
