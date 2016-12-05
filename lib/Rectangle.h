@@ -8,6 +8,7 @@
 class Rectangle : public Polygon {
 public:
 	double angle;
+	double angleZ;
 	double width;
   double height;
 	double z;

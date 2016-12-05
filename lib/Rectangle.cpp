@@ -66,6 +66,7 @@ void Rectangle::draw() {
     glBindTexture (GL_TEXTURE_2D, texture());
     glTranslatef(position()->x, position()->y, 0);
     glRotatef(angle, 0, 0, 1);
+    glRotatef(angleZ, 1, 1, 0);
     glColor3f(color[0], color[1], color[2]);
 
     glBegin(GL_QUADS); // parte de cima

@@ -12,7 +12,7 @@ private:
   double angle;
   Rectangle* body;
   Rectangle axis[4];
-  Rectangle wheels[4];
+  Circle wheels[4];
   Rectangle* cannon;
   std::vector<Rectangle*> cracks[4];
   double wheelAngle;
@@ -34,7 +34,7 @@ public:
   void draw(bool light);
   void moveWheels(double angle);
   void moveWheels();
-  void moveCannon(double angle);
+  void moveCannon(double angleX, double angleY);
   void move(double speed);
   void position(double x , double y);
 	void position(Point* newPos);

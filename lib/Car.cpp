@@ -40,13 +40,10 @@ void Car::makeWheels() {
 	GLfloat shininessWheel[] = {0.0};
 
   for (size_t i = 0; i < 4; i++) {
-    wheels[i] = *(new Rectangle(body->width/2.0, body->height/3, colorWheel, 0, emissionWheel, ambientWheel, difuseWheel, specularWheel, shininessWheel));
+    wheels[i] = *(new Circle(body->width/2.0, colorWheel, 0, emissionWheel, ambientWheel, difuseWheel, specularWheel, shininessWheel));
     wheels[i].depth(body->width/2.0);
-    //Cracks
-    GLfloat colorCrack[3] = {158/256.0, 158/256.0, 158/256.0};
-    for (size_t j = 0; j < 4; j++) {
-      cracks[i].push_back(new Rectangle(wheels[i].width, wheels[i].height/10.0, colorCrack));
-    }
+    wheels[i].flip = true;
+    wheels[i].depth(0.01);
   }
 }
 void Car::makeAxis() {
@@ -96,15 +93,23 @@ void Car::moveWheels() {
   wheels[0].angle = 0;
   wheels[1].angle = 0;
 }
-void Car::moveCannon(double speed) {
-  if (((int)angle % 360) > 90 || ((int) angle % 360) < -90) speed = -speed;
-  speed = cannon->angle + speed;
-  if (speed > 0) {
-    speed = (speed <= 45) ?  speed : 45;
-  } else {
-    speed = (speed >= -45) ?  speed : -45;
+void Car::moveCannon(double speedX, double speedZ) {
+  if (((int)angle % 360) > 90 || ((int) angle % 360) < -90){
+    speedX = -speedX;
+    speedZ = -speedZ;
   }
-  cannon->angle = speed;
+  speedX = cannon->angle + speedX;
+  if (speedX > 0) {
+    speedX = (speedX <= 45) ?  speedX : 45;
+  } else {
+    speedX = (speedX >= -45) ?  speedX : -45;
+  }
+  cannon->angle = speedX;
+
+  speedZ = cannon->angleZ + speedZ;
+  if (speedZ >= 0) {
+    cannon->angleZ = (speedZ <= 45) ?  speedZ : 45;
+  }
 }
 void Car::move(double speed) {
   double regulator = 10.0;
@@ -115,28 +120,7 @@ void Car::move(double speed) {
   x = -y*sin(radians);
   y = y*cos(radians);
   position(new Point(position()->x + x,position()->y + y));
-  moveCracks(speed);
 }
-
-void Car::moveCracks(double speed) {
-  for (size_t i = 0; i < 4; i++) {
-    for (size_t j = 0; j < 4; j++) {
-      double y = cracks[i][j]->position()->y + speed;
-      cracks[i][j]->position(0,y);
-      double distanceFromCenterOfWheel = cracks[i][j]->position()->y + -wheels[i].height/2.0 + wheels[i].height/3.0*(j%4);
-      GLfloat color[3] = {158/256.0, 158/256.0, 158/256.0};
-      if(distanceFromCenterOfWheel > wheels[i].height/2.0) {
-        cracks[i].erase(cracks[i].begin() + j);
-        cracks[i].push_back(new Rectangle(wheels[i].width, wheels[i].height/10.0, color));
-      }
-      if(distanceFromCenterOfWheel < -wheels[i].height/2.0) {
-        cracks[i].erase(cracks[i].begin() + j);
-        cracks[i].insert(cracks[i].begin(), new Rectangle(wheels[i].width, wheels[i].height/10.0, color));
-      }
-    }
-  }
-}
-
 void Car::positionCannon() {
   cannon->position(0,body->height/2.0);
 }
@@ -147,13 +131,10 @@ void Car::positionAxis() {
   axis[3].position(body->width/2.0 + axis[3].width/2.0, -body->height/2.0 + body->height/6.0 + axis[2].height/2.0);
 }
 void Car::positionWheels() {
-  wheels[0].position(axis[0].position()->x - wheels[0].width, axis[0].position()->y);
-  wheels[1].position(axis[1].position()->x + wheels[1].width, axis[1].position()->y);
-  wheels[2].position(axis[2].position()->x - wheels[2].width, axis[2].position()->y);
-  wheels[3].position(axis[3].position()->x + wheels[3].width, axis[3].position()->y);
-  for (size_t i = 0; i < 16; i++) {
-    cracks[i/4][i%4]->position(0, cracks[i/4][i%4]->position()->y);
-  }
+  wheels[0].position(axis[0].position()->x - wheels[0].radius/2, axis[0].position()->y);
+  wheels[1].position(axis[1].position()->x + wheels[1].radius/2, axis[1].position()->y);
+  wheels[2].position(axis[2].position()->x - wheels[2].radius/2, axis[2].position()->y);
+  wheels[3].position(axis[3].position()->x + wheels[3].radius/2, axis[3].position()->y);
 }
 void Car::position(Point *newPos) {
   Circle::position(newPos);
@@ -197,6 +178,8 @@ Circle* Car::shoot() {
   double y = initX*sin(angle* 0.0174533) + initY*cos(angle* 0.0174533);
   shot->position(shot->position()->x + x, shot->position()->y + y);
   shot->angle = cannon->angle + angle;
+  shot->angleZ = cannon->angleZ;
+  shot->depth(wheels[0].radius + body->height/2 - cannon->height);
   return shot;
 }
 
@@ -214,7 +197,7 @@ void Car::light() {
     GLfloat specular[] = {1.0, 1.0, 0, 1};
     GLfloat direction[] = {0.0, 1.0, 0};
     // GLfloat ambientLight0[] = {1, 1, 1, 1};
-  	// glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLight0);
+    // glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLight0);
     glLightfv(GL_LIGHT1, GL_POSITION, position);
     glLightfv(GL_LIGHT1, GL_DIFFUSE, difuse);
     glLightfv(GL_LIGHT1, GL_SPECULAR, specular);
@@ -228,26 +211,18 @@ int teste = 0;
 void Car::draw(bool light) {
   glPushMatrix();
     // Circle::draw();
-    glTranslatef(position()->x, position()->y,0);
+    glTranslatef(position()->x, position()->y,wheels[0].radius);
     glRotatef(angle, 0, 0, 1);
     if (light) this->light();
-    cannon->draw();
+    glPushMatrix();
+      glTranslatef(0, 0, body->height/2 - cannon->height);
+      cannon->draw();
+    glPopMatrix();
     body->draw();
     for (size_t i = 0; i < 4; i++)
       axis[i].draw();
     for (size_t i = 0; i < 4; i++){
       wheels[i].draw();
-      glPushMatrix();
-        glTranslatef(wheels[i].position()->x, wheels[i].position()->y, 0);
-        if (i == 0 || i == 1)
-          glRotatef(wheels[i].angle, 0, 0, 1);
-        for (size_t j = 0; j < 4; j++) {
-          glPushMatrix();
-            glTranslatef(0, -wheels[i].height/2.0 + wheels[i].height/3.0*(j%4), 0);
-            cracks[i][j]->draw();
-          glPopMatrix();
-        }
-      glPopMatrix();
     }
   glPopMatrix();
 }
