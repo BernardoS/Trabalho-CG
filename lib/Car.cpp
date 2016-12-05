@@ -251,3 +251,6 @@ void Car::draw(bool light) {
     }
   glPopMatrix();
 }
+
+double Car::getWidth() {return body->width;}
+double Car::getHeight() {return body->height;}
