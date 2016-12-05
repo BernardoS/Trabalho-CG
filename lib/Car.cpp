@@ -96,7 +96,6 @@ void Car::moveCannon(double speedX, double speedZ) {
   // if (((int)angle % 360) > 90 || ((int) angle % 360) < -90){
   //   speedX = -speedX;
   // }
-  speedZ = -speedZ;
   if(speedX != 0){
     speedX = cannon->angle + speedX;
     if (speedX > 0) {
@@ -109,11 +108,16 @@ void Car::moveCannon(double speedX, double speedZ) {
   if (speedZ != 0) {
     speedZ = cannon->angleZ + speedZ;
     if (speedZ >= 0) {
-      cannon->angleZ = (speedZ <= 45) ?  speedZ : 45;
+      cannon->angleZ = (speedZ <= 10) ?  speedZ : 10;
     }
   }
 }
 void Car::move(double speed) {
+  for (size_t i = 0; i < 4; i++) {
+    int aux = (wheels[i].spin + ((speed > 0) ? 1 : -1))%360;
+    if (speed < 0 && aux > 0) wheels[i].spin = -aux;
+    else wheels[i].spin = aux;
+  }
   double regulator = 10.0;
   angle += (speed >= 0) ? wheels[0].angle/regulator : -wheels[0].angle/regulator;
   double radians = (speed >= 0) ? angle* 0.0174533 : (angle - 180)* 0.0174533;
@@ -133,9 +137,9 @@ void Car::positionAxis() {
   axis[3].position(body->width/2.0 + axis[3].width/2.0, -body->height/2.0 + body->height/6.0 + axis[2].height/2.0);
 }
 void Car::positionWheels() {
-  wheels[0].position(axis[0].position()->x - wheels[0].radius/2 - wheels[0].depth(), axis[0].position()->y);
+  wheels[0].position(axis[0].position()->x - wheels[0].radius/2, axis[0].position()->y);
   wheels[1].position(axis[1].position()->x + wheels[1].radius/2, axis[1].position()->y);
-  wheels[2].position(axis[2].position()->x - wheels[2].radius/2 - wheels[2].depth(), axis[2].position()->y);
+  wheels[2].position(axis[2].position()->x - wheels[2].radius/2, axis[2].position()->y);
   wheels[3].position(axis[3].position()->x + wheels[3].radius/2, axis[3].position()->y);
 }
 void Car::position(Point *newPos) {
@@ -210,17 +214,19 @@ void Car::light() {
   glPopMatrix();
 }
 int teste = 0;
-void Car::draw(bool light) {
+void Car::draw(bool light, bool hideBody, bool hideCannon) {
   glPushMatrix();
-    Circle::draw();
+    // Circle::draw();
     glTranslatef(position()->x, position()->y,wheels[0].radius);
     glRotatef(angle, 0, 0, 1);
     if (light) this->light();
-    glPushMatrix();
+    if (!hideCannon) {
+      glPushMatrix();
       glTranslatef(0, 0, depth()/2 - cannon->depth()/2);
       cannon->draw();
-    glPopMatrix();
-    body->draw();
+      glPopMatrix();
+    }
+    if (!hideBody) body->draw();
     for (size_t i = 0; i < 4; i++)
       axis[i].draw();
     for (size_t i = 0; i < 4; i++){

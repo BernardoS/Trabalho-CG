@@ -14,7 +14,7 @@ public:
 	bool sphere;
 	bool flip;
 	double acrescimo;
-	double spin;
+	int spin;
 	Circle();
 	Circle(double radius);
 	Circle (double radius, GLfloat color[3]);

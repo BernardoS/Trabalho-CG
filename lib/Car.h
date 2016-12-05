@@ -31,7 +31,7 @@ public:
   double angulation();
   Circle* shoot();
   void angulation(double angle);
-  void draw(bool light);
+  void draw(bool light, bool hideBody, bool hideCannon);
   void moveWheels(double angle);
   void moveWheels();
   void moveCannon(double angleX, double angleY);

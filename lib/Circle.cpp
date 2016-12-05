@@ -89,7 +89,7 @@ void Circle::draw() {
     glRotatef(angleZ, 1, 1, 0);
     if (flip) {
       glRotatef(90, 0, 1, 0);
-      // glRotatef(++spin, 0, 0, 1);
+      glRotatef(spin, 0, 0, 1);
     }
     glColor3f(color[0],color[1],color[2]);
     if (sphere) {
@@ -101,7 +101,7 @@ void Circle::draw() {
       glBegin(GL_TRIANGLE_FAN);
       glNormal3f(0, 0, 0);
       glTexCoord2f(0, 0);
-      glVertex3f(0, 0, 0);
+      glVertex3f(0, 0, (flip) ? -z/2 : 0);
       for(float i = 0; i <= n; i++){
         float angle = 2.0 * 3.1415926 * i / n;
         float x = radius * cos(angle);
@@ -111,7 +111,7 @@ void Circle::draw() {
         double len = sqrt(normX*normX + normY*normY);
         glNormal3f(normX/len, normY/len, 0);
         glTexCoord2f(x, y);
-        glVertex3f(x, y,0);
+        glVertex3f(x, y, (flip) ? -z/2 : 0);
       }
       glEnd();
 
@@ -119,7 +119,7 @@ void Circle::draw() {
       glBegin(GL_TRIANGLE_FAN);
       glNormal3f(0, 0, 0);
       glTexCoord2f(0, 0);
-      glVertex3f(0, 0, z);
+      glVertex3f(0, 0, (flip) ? z/2 : z);
       for(float i = 0; i <= n; i++){
         float angle = 2.0 * 3.1415926 * i / n;
         float x = radius * cos(angle);
@@ -129,7 +129,7 @@ void Circle::draw() {
         double len = sqrt(normX*normX + normY*normY);
         glNormal3f(normX/len, normY/len, 0);
         glTexCoord2f(x, y);
-        glVertex3f(x, y,z);
+        glVertex3f(x, y,(flip) ? z/2 : z);
       }
       glEnd();
 
@@ -151,10 +151,10 @@ void Circle::draw() {
         float nextY = radius * sin(nextAngle);
         glNormal3f(0, 1, 0);
         if (!flip) glTexCoord2f(x, y);
-        glVertex3f(nextX, nextY, z);
-        glVertex3f(x, y, z);
-        glVertex3f(x, y, 0);
-        glVertex3f(nextX, nextY, 0);
+        glVertex3f(nextX, nextY, (flip) ? z/2 : z);
+        glVertex3f(x, y, (flip) ? z/2 : z);
+        glVertex3f(x, y, (flip) ? -z/2 : 0);
+        glVertex3f(nextX, nextY, (flip) ? -z/2 : 0);
         glEnd();
       }
     }

@@ -110,7 +110,7 @@ void makeArena(const char* fill, double r, double x, double y){
 		GLfloat color[3] = {1,1,1};
 
 		GLfloat materialEmission[] = {0, 0, 0, 1};
-		GLfloat materialAmbient[] = {0, 0, 0, 1};
+		GLfloat materialAmbient[] = {0.5, 0.5, 0.5, 1};
 		GLfloat materialDifuse[] = {0, 0, 0, 1};
 		GLfloat materialSpecular[] = {0, 0, 0, 1};
 		GLfloat materialShininess[] = {0.0};
@@ -354,9 +354,9 @@ void displayFunc(){
 			// Arena[1].drawWall(); // luiz
 			LargadaChegada->draw();
 			for (size_t i = 0; i < Inimigos.size(); i++) {
-				Inimigos[i]->draw(false);
+				Inimigos[i]->draw(false, false, false);
 			}
-			Jogador->draw(nightMode);
+			Jogador->draw(nightMode, false, false);
 		glPopMatrix();
 		for (size_t i = 0; i < shots.size(); i++) {
 			glPushMatrix();
@@ -424,9 +424,10 @@ int lastX = 0;
 int lastY = 0;
 int buttonDown = 0;
 void motionFunc(int x, int y) {
+	// std::cout << (relativeY(y) - mouseY >= 0) << std::endl;
 	double xMove = (relativeX(x) > mouseX) ? -1 : 1;
-	double yMove = (relativeY(y) > mouseY) ? -1 : 1;
-	Jogador->moveCannon(xMove, yMove);
+	double yMove = (relativeY(y) >= mouseY) ? 1 : -1;
+	Jogador->moveCannon(xMove, yMove*0.05);
 	mouseX = relativeX(x);
 	mouseY = relativeY(y);
 }
@@ -598,6 +599,7 @@ void init() {
 	floorTexture = loadTexture("textures/floor.bmp");
 	// startTexture = loadTexture("textures/start.bmp");
 	carTexture = loadTexture("textures/car.bmp");
+	Arena[1].texture(floorTexture);
 	Arena[0].texture(floorTexture);
 	// LargadaChegada->texture(startTexture);
 	Jogador->texture(carTexture);
