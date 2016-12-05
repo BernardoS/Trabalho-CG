@@ -9,7 +9,7 @@ void Car::makeBody(GLfloat color[3]) {
   angle = 0;
   double height = (radius*sqrt(2));
   body = new Rectangle(height/3, height, color, Circle::texture(), emission(), ambient(), difuse(), specular(), shininess());
-  body->depth(body->width/2);
+  body->depth(0.02);
 }
 
 double Car::depth(){
@@ -42,7 +42,7 @@ void Car::makeWheels() {
   for (size_t i = 0; i < 4; i++) {
     wheels[i] = *(new Circle(body->width/2.0, colorWheel, 0, emissionWheel, ambientWheel, difuseWheel, specularWheel, shininessWheel));
     wheels[i].flip = true;
-    wheels[i].depth(depth());
+    wheels[i].depth(depth()/2);
   }
 }
 void Car::makeAxis() {
@@ -93,11 +93,10 @@ void Car::moveWheels() {
   wheels[1].angle = 0;
 }
 void Car::moveCannon(double speedX, double speedZ) {
-  if (((int)angle % 360) > 90 || ((int) angle % 360) < -90){
-    speedX = -speedX;
-  }
+  // if (((int)angle % 360) > 90 || ((int) angle % 360) < -90){
+  //   speedX = -speedX;
+  // }
   speedZ = -speedZ;
-  // std::cout << speedX << std::endl;
   if(speedX != 0){
     speedX = cannon->angle + speedX;
     if (speedX > 0) {
@@ -134,9 +133,9 @@ void Car::positionAxis() {
   axis[3].position(body->width/2.0 + axis[3].width/2.0, -body->height/2.0 + body->height/6.0 + axis[2].height/2.0);
 }
 void Car::positionWheels() {
-  wheels[0].position(axis[0].position()->x - wheels[0].radius/2, axis[0].position()->y);
+  wheels[0].position(axis[0].position()->x - wheels[0].radius/2 - wheels[0].depth(), axis[0].position()->y);
   wheels[1].position(axis[1].position()->x + wheels[1].radius/2, axis[1].position()->y);
-  wheels[2].position(axis[2].position()->x - wheels[2].radius/2, axis[2].position()->y);
+  wheels[2].position(axis[2].position()->x - wheels[2].radius/2 - wheels[2].depth(), axis[2].position()->y);
   wheels[3].position(axis[3].position()->x + wheels[3].radius/2, axis[3].position()->y);
 }
 void Car::position(Point *newPos) {
