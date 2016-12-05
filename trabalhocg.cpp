@@ -250,6 +250,10 @@ int camAngle = 0;
 double camX = 0;
 double camY = 0;
 int toggleCam = 0;
+double camposx = 1;
+double camposy = 100;
+double camposz = 100;
+double camtheta = 0;
 
 void keyUpFunc(unsigned char c, int i1, int i2) {
   keyPressed[int(c)] = false;
@@ -258,6 +262,14 @@ void keyUpFunc(unsigned char c, int i1, int i2) {
 	if (c == '2') toggleCam = 2;
 	if (c == '3') toggleCam = 3;
 	if (c == '0') toggleCam = 0;
+	if (c == 'f') camposx += 1;
+	if (c == 'h') camposy += 0.01;
+	if (c == 'k') camposz += 1;
+	if (c == 'g') camposx -= 1;
+	if (c == 'j') camposy -= 0.01;
+	if (c == 'l') camposz -= 1;
+	if (c == '+') camtheta += 1;
+	if (c == '-') camtheta -= 1;
 }
 void keyPressFunc(unsigned char c, int i1, int i2) {
   keyPressed[int(c)] = true;
@@ -270,50 +282,68 @@ void makeLight() {
 
 void displayFunc(){
 	glMatrixMode(GL_MODELVIEW);
-
-
 	glClearColor (0, 0, 0,0);
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
-
 	makeLight();
-
 	printTime(0);
-	if (gameOver) {
-		printGameStatus();
-	}
-	double playerx = Jogador->position()->x;
-	double playery = Jogador->position()->y;
-	double playerz = Jogador->depth();
-
+	if (gameOver) printGameStatus();
+	// cout << "player at ( " << Jogador->position()->x << " , " << Jogador->position()->y << " , " << Jogador->depth() << " )" << endl;
+	// cout << "camera position ( " << Jogador->position()->x + (Jogador->getWidth() / 2) * cos(Jogador->angulation() * M_PI / 180);
+	// cout << " , " << Jogador->position()->y + (Jogador->getHeight() / 2) * sin(Jogador->angulation() * M_PI / 180);
+	// cout << " , " << Jogador->depth() << " )" << endl;
+	// cout << "camera looking at ( " << Jogador->position()->x + (Jogador->radius) * cos(Jogador->angulation() * M_PI / 180);
+	// cout << " , " << Jogador->position()->y + (Jogador->radius) * sin(Jogador->angulation() * M_PI / 180);
+	// cout << " , " << Jogador->depth() << " )" << endl;
 	if(toggleCam == 1) { // cockpit cam
-		// luiz
-		// glTranslatef(camX, camY, camDist);
-		// glRotatef(camXZAngle, 0.5, 0, 0);
-		// glRotatef(camXYAngle, 0, 0.5, 0);
-
-		glTranslatef(0.5, 0.5, 0);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		// fov, aspect ratio, near, far
+		gluPerspective(45, 1, 0.0001, 100);
+		glMatrixMode(GL_MODELVIEW);
 		// camera position, camera looking at, up vector
-		gluLookAt(	playerx + (Jogador->radius / 4) * cos(Jogador->angulation() * M_PI / 180),
-								playery,
-								playerz + (Jogador->radius / 6) * -sin(Jogador->angulation() * M_PI / 180),
-								playerx + Jogador->radius * cos(Jogador->angulation() * M_PI / 180),
-								playery,
-								playerz + Jogador->radius * -sin(Jogador->angulation() * M_PI / 180),
-								0, 0, 1  );
-
-		// gluPerspective(camAngle, 1, camNear, camFar); // fov, aspect ratio, near, far
+		gluLookAt(
+			Jogador->position()->x + (Jogador->getWidth() / 2) * -sin(Jogador->angulation() * M_PI / 180),
+			Jogador->position()->y + (Jogador->getHeight() / 2) * cos(Jogador->angulation() * M_PI / 180),
+			Jogador->depth(),
+			Jogador->position()->x + (Jogador->radius) * -sin(Jogador->angulation() * M_PI / 180),
+			Jogador->position()->y + (Jogador->radius) * cos(Jogador->angulation() * M_PI / 180),
+			Jogador->depth(),
+			0, 0, 1
+		);
 	} else if(toggleCam == 2) {
-		glMatrixMode (GL_PROJECTION);
-	    glLoadIdentity ();
-	    gluPerspective (45, 1, 0.1, 2);
-    glMatrixMode (GL_MODELVIEW);
-
-		gluLookAt(playerx,playery,1, playerx, playery, 0,  0,1,0);
-	} else if(toggleCam == 3) {
-		glTranslatef(camX, camY, camDist);
-		glRotatef(camXZAngle, 0.5, 0.5, 0);
-		glRotatef(camXYAngle, 0.5, 0.5, 0);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		// fov, aspect ratio, near, far
+		gluPerspective(45, 1, 0.0001, 100);
+		glMatrixMode(GL_MODELVIEW);
+		glTranslatef(0.05, 0, 0);
+		// camera position, camera looking at, up vector
+		gluLookAt(
+			Jogador->position()->x + (Jogador->getWidth() * 2/3) * -sin(Jogador->angulation() * M_PI / 180),
+			Jogador->position()->y + (Jogador->getWidth() * 2/3) * cos(Jogador->angulation() * M_PI / 180),
+			Jogador->depth(),
+			Jogador->position()->x + (Jogador->getWidth()) * -sin(Jogador->angulation() * M_PI / 180),
+			Jogador->position()->y + (Jogador->getWidth()) * cos(Jogador->angulation() * M_PI / 180),
+			Jogador->depth(),
+			0, 0, 1
+		);
+	} else if(toggleCam == 3) { // third person cam
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		// fov, aspect ratio, near, far
+		gluPerspective(100, 1, 0.0001, 100);
+		glMatrixMode(GL_MODELVIEW);
+		// camera position, camera looking at, up vector
+		gluLookAt(
+			Jogador->position()->x - (Jogador->radius) * -sin(Jogador->angulation() * M_PI / 180),
+			Jogador->position()->y - (Jogador->radius) * cos(Jogador->angulation() * M_PI / 180),
+			Jogador->depth() * 3,
+			Jogador->position()->x,
+			Jogador->position()->y,
+			Jogador->depth(),
+			0, 0, 1
+		);
 	} else { /* default 2d camera */ }
 
 	glPushMatrix();

@@ -43,6 +43,8 @@ public:
   double depth();
   void depth(double z);
   void light();
+  double getWidth();
+  double getHeight();
 };
 
 #endif // Car_H
